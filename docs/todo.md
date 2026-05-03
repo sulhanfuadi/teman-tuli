@@ -33,6 +33,7 @@ This file is the execution baseline for next implementation cycles.
 
 #### P0.2 Progress (Date-Stamped)
 - `2026-05-03`: Added deterministic clean-bootstrap + health-check runbook in `apps/teman-tuli-api/README.md`.
+- `2026-05-03`: Added runnable verifier script `apps/teman-tuli-api/scripts/verify-p0.2-migration-repro.sh` for Docker-enabled execution.
 - `2026-05-03`: Local runtime blocker detected (`docker` unavailable), so clean DB reset verification remains pending until Docker-enabled environment is used.
 
 ### 3) Production Environment & Secret Hygiene

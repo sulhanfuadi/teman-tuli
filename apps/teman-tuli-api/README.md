@@ -139,6 +139,13 @@ Expected response:
 - Production-like bootstrap must only use committed migrations via `npm run prisma:deploy`.
 - Do not rely on local-only schema changes or `prisma db push`.
 
+### Automation Helper
+Run this helper on a Docker-enabled machine to validate Priority 0.2 end-to-end:
+```bash
+cd apps/teman-tuli-api
+./scripts/verify-p0.2-migration-repro.sh
+```
+
 ### Local Verification Evidence (2026-05-03)
 - `npm run prisma:deploy` was executed in this workspace and failed at schema engine stage because local PostgreSQL service was unavailable.
 - `docker` command is not installed in this runtime, so clean DB reset could not be executed here.

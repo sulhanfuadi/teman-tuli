@@ -59,3 +59,8 @@
 - Input: Physical iPhone access is unavailable, but execution evidence progress must continue.
 - Change: Added simulator pre-validation evidence template and linked it from evidence index and TODO blocker notes.
 - Why: Keep documentation and review readiness moving without falsely claiming real-device sign-off.
+
+## Iteration 13 — P0.2 Verification Automation Bridge
+- Input: Priority 0.2 verification is blocked in local runtime due to missing Docker/PostgreSQL binaries.
+- Change: Added executable verifier script for clean migration bootstrap and API health check on Docker-enabled machines.
+- Why: Reduce manual verification steps and enable quick closure as soon as compatible environment is available.
