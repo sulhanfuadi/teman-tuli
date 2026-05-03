@@ -153,6 +153,14 @@ cd apps/teman-tuli-api
   - `npm test` ✅
   - `npm run build` ✅
 
+### Updated Verification Evidence (2026-05-03)
+- Re-verified using Docker-enabled runtime (`docker` + `colima` + compose plugin).
+- `./scripts/verify-p0.2-migration-repro.sh` completed successfully end-to-end.
+- Confirmed:
+  - clean DB reset from volume,
+  - committed migration `0001_init` applied via `npm run prisma:deploy`,
+  - API booted and returned `{"ok":true,"service":"teman-tuli-backend"}` on `/health`.
+
 ## Testing
 ```bash
 npm test

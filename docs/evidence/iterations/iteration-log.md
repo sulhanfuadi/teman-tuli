@@ -64,3 +64,8 @@
 - Input: Priority 0.2 verification is blocked in local runtime due to missing Docker/PostgreSQL binaries.
 - Change: Added executable verifier script for clean migration bootstrap and API health check on Docker-enabled machines.
 - Why: Reduce manual verification steps and enable quick closure as soon as compatible environment is available.
+
+## Iteration 14 — P0.2 Verified in Docker-Enabled Environment
+- Input: Docker runtime became available via local setup (`docker` + `colima` + compose plugin).
+- Change: Executed automated verifier script successfully: clean volume reset, committed migration deployment, and API health confirmation.
+- Why: Close migration reproducibility risk before public production readiness.

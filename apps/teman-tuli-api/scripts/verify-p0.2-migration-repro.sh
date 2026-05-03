@@ -50,14 +50,14 @@ echo "$DEPLOY_OUTPUT" | grep -q "Datasource \"db\": PostgreSQL database \"teman_
 echo "$DEPLOY_OUTPUT" | grep -q "0001_init"
 
 echo "[P0.2] Booting API for health check"
-npm run dev >/tmp/teman-tuli-api-dev.log 2>&1 &
+PORT=3301 npm run dev >/tmp/teman-tuli-api-dev.log 2>&1 &
 API_PID=$!
 trap 'kill $API_PID >/dev/null 2>&1 || true' EXIT
 
 sleep 5
 
 set +e
-HEALTH_BODY="$(curl -sS http://localhost:3000/health)"
+HEALTH_BODY="$(curl -sS http://127.0.0.1:3301/health)"
 HEALTH_STATUS=$?
 set -e
 

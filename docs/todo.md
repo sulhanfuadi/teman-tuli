@@ -26,15 +26,15 @@ This file is the execution baseline for next implementation cycles.
 - `2026-05-03`: Added simulator pre-validation template (`docs/evidence/iterations/simulator-prevalidation.md`) to keep progress moving while iPhone access is unavailable.
 
 ### 2) Backend Migration Reproducibility Check
-- [ ] Verify baseline migration applies from clean DB using committed migration files.
-- [ ] Confirm app can run after `prisma:deploy` only (without ad-hoc local schema drift).
+- [x] Verify baseline migration applies from clean DB using committed migration files. (`2026-05-03`)
+- [x] Confirm app can run after `prisma:deploy` only (without ad-hoc local schema drift). (`2026-05-03`)
 - [x] Document exact command sequence and expected outputs in backend README. (`2026-05-03`)
 - **Done when:** a clean environment can reliably bootstrap DB and run API.
 
 #### P0.2 Progress (Date-Stamped)
 - `2026-05-03`: Added deterministic clean-bootstrap + health-check runbook in `apps/teman-tuli-api/README.md`.
 - `2026-05-03`: Added runnable verifier script `apps/teman-tuli-api/scripts/verify-p0.2-migration-repro.sh` for Docker-enabled execution.
-- `2026-05-03`: Local runtime blocker detected (`docker` unavailable), so clean DB reset verification remains pending until Docker-enabled environment is used.
+- `2026-05-03`: Verification succeeded end-to-end on Docker-enabled environment: clean DB reset, `prisma:deploy`, and API `/health` boot check passed.
 
 ### 3) Production Environment & Secret Hygiene
 - [x] Define required env vars for dev/staging/prod (`DATABASE_URL`, `JWT_SECRET`, etc.). (`2026-05-03`)
