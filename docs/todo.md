@@ -62,10 +62,16 @@ This file is the execution baseline for next implementation cycles.
 - `2026-05-03`: Added integration resilience tests and verified `npm test` + `npm run build` pass.
 
 ### 5) Observability Baseline
-- [ ] Add structured server logs with request correlation IDs.
-- [ ] Define minimal incident triage fields (route, status, user scope, timestamp).
-- [ ] Add error monitoring plan (tool choice + integration steps documented).
+- [x] Add structured server logs with request correlation IDs. (`2026-05-03`)
+- [x] Define minimal incident triage fields (route, status, user scope, timestamp). (`2026-05-03`)
+- [x] Add error monitoring plan (tool choice + integration steps documented). (`2026-05-03`)
 - **Done when:** failures can be diagnosed quickly without guessing.
+
+#### P1.5 Completion Notes (Date-Stamped)
+- `2026-05-03`: Added observability plugin with `x-correlation-id` propagation and structured `api_request_completed`/`api_request_failed` logs.
+- `2026-05-03`: Added minimum incident triage fields in logs (`route`, `statusCode`, `userScope`, `timestamp`, `requestId`, `correlationId`).
+- `2026-05-03`: Added monitoring plan with tool choice and rollout steps in `apps/teman-tuli-api/docs/observability-baseline.md`.
+- `2026-05-03`: Added integration coverage for correlation-id behavior and re-ran backend quality checks.
 
 ### 6) iOS Runtime Reliability Sweep
 - [ ] Validate interruption handling for call/background/foreground on physical device.

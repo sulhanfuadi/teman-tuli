@@ -44,3 +44,8 @@
 - Input: Need safer API behavior under malformed and high-volume traffic before launch.
 - Change: Added route body limits, transcript payload guards, auth/write rate limiting, and standardized operational error envelope.
 - Why: Keep API behavior predictable during abusive traffic, oversized payloads, and runtime failures.
+
+## Iteration 10 — Priority 1.5 Observability Baseline
+- Input: Need faster incident diagnosis with consistent request tracing and triage metadata.
+- Change: Added correlation-ID propagation, structured request lifecycle logs, and documented monitoring rollout plan.
+- Why: Reduce debugging guesswork and speed up operational response for backend incidents.
