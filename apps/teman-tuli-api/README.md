@@ -33,6 +33,21 @@ Base path: `/api/v1`
 - `DELETE /sessions/:id`
 - `POST /sessions/:id/feedback`
 
+## Resilience Safeguards (Priority 1.4)
+- Request body limits by endpoint:
+  - `POST /auth/register`, `POST /auth/login`: `16 KB`
+  - `POST /sessions`: `512 KB`
+  - `PATCH /sessions/:id`, `POST /sessions/:id/feedback`: `64 KB`
+- Rate limiting baseline:
+  - Auth endpoints: `8 req/minute` per IP
+  - Write endpoints (`POST/PATCH/DELETE` session flows): `30 req/minute` by user (fallback IP)
+- Transcript payload guards:
+  - `fullText` max `20_000` chars
+  - `segments` max `500`
+  - `segment.text` max `300` chars
+- Standardized error envelope:
+  - `{ message, code, requestId, details? }`
+
 ## Privacy Defaults
 - Transcripts are private by default.
 - Sessions are scoped to the authenticated user.

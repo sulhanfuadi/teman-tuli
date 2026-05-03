@@ -39,3 +39,8 @@
 - Input: Need deterministic env contracts and safer secret handling across dev/staging/prod.
 - Change: Added env/secret policy document, rotation guidance, and tightened runtime env validation outside test mode.
 - Why: Reduce misconfiguration risk and prevent accidental weak-secret defaults in runtime environments.
+
+## Iteration 9 — Priority 1.4 API Resilience Safeguards
+- Input: Need safer API behavior under malformed and high-volume traffic before launch.
+- Change: Added route body limits, transcript payload guards, auth/write rate limiting, and standardized operational error envelope.
+- Why: Keep API behavior predictable during abusive traffic, oversized payloads, and runtime failures.

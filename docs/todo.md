@@ -50,10 +50,16 @@ This file is the execution baseline for next implementation cycles.
 ## Priority 1 — Reliability & Safety Hardening
 
 ### 4) API Resilience Safeguards
-- [ ] Add request size limits and payload guards for transcript-heavy endpoints.
-- [ ] Add rate limiting strategy for auth and write endpoints.
-- [ ] Standardize error responses for operational debugging.
+- [x] Add request size limits and payload guards for transcript-heavy endpoints. (`2026-05-03`)
+- [x] Add rate limiting strategy for auth and write endpoints. (`2026-05-03`)
+- [x] Standardize error responses for operational debugging. (`2026-05-03`)
 - **Done when:** API behavior under malformed/high-volume requests is controlled and predictable.
+
+#### P1.4 Completion Notes (Date-Stamped)
+- `2026-05-03`: Added route-level body limits and transcript payload guards (`fullText`, `segments`, `segment.text`).
+- `2026-05-03`: Added `@fastify/rate-limit` with route policies for auth and write endpoints.
+- `2026-05-03`: Added standardized error envelope `{ message, code, requestId, details? }` and normalization for framework-level validation/body-size errors.
+- `2026-05-03`: Added integration resilience tests and verified `npm test` + `npm run build` pass.
 
 ### 5) Observability Baseline
 - [ ] Add structured server logs with request correlation IDs.
