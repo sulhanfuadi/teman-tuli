@@ -13,9 +13,9 @@ final class LiveCaptionViewModel: ObservableObject {
     let speechService: SpeechCaptionService
     private let apiClient: APIClient
 
-    init(apiClient: APIClient, speechService: SpeechCaptionService = SpeechCaptionService()) {
+    init(apiClient: APIClient, speechService: SpeechCaptionService? = nil) {
         self.apiClient = apiClient
-        self.speechService = speechService
+        self.speechService = speechService ?? SpeechCaptionService()
     }
 
     func startCaptioning() async {
