@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: Teman Tuli API
+  version: 1.0.0
+  description: Privacy-first transcript archive API for Teman Tuli live caption app.
+servers:
+  - url: /api/v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TranscriptSegment:
+      type: object
+      properties:
+        text: { type: string }
+        startMs: { type: integer }
+        endMs: { type: integer, nullable: true }
+    TranscriptSession:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        className: { type: string, nullable: true }
+        languageCode: { type: string, example: id-ID }
+        fullText: { type: string }
+        notes: { type: string, nullable: true }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time }
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register new user
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login user
+  /sessions:
+    get:
+      tags: [Transcript Sessions]
+      security: [{ bearerAuth: [] }]
+      summary: List private transcript sessions
+    post:
+      tags: [Transcript Sessions]
+      security: [{ bearerAuth: [] }]
+      summary: Save private transcript session
+  /sessions/{id}:
+    get:
+      tags: [Transcript Sessions]
+      security: [{ bearerAuth: [] }]
+      summary: Read private transcript session detail
+    patch:
+      tags: [Transcript Sessions]
+      security: [{ bearerAuth: [] }]
+      summary: Update title, class name, or notes
+    delete:
+      tags: [Transcript Sessions]
+      security: [{ bearerAuth: [] }]
+      summary: Delete private transcript session
+  /sessions/{id}/feedback:
+    post:
+      tags: [Caption Feedback]
+      security: [{ bearerAuth: [] }]
+      summary: Submit caption quality feedback

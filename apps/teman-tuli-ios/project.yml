@@ -1,0 +1,33 @@
+name: TemanTuli
+options:
+  minimumXcodeGenVersion: 2.38.0
+packages: {}
+targets:
+  TemanTuli:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: TemanTuliApp/Sources
+    info:
+      path: TemanTuliApp/Info.plist
+      properties:
+        UILaunchScreen: {}
+        CFBundleDisplayName: Teman Tuli
+        NSMicrophoneUsageDescription: Teman Tuli membutuhkan mikrofon untuk membuat live caption saat kelas.
+        NSSpeechRecognitionUsageDescription: Teman Tuli menggunakan speech recognition untuk mengubah suara menjadi teks caption.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sulhan.temantuli
+        SWIFT_VERSION: 5.9
+    scheme:
+      testTargets:
+        - TemanTuliTests
+  TemanTuliTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: TemanTuliApp/Tests
+    dependencies:
+      - target: TemanTuli
