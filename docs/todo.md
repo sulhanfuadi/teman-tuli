@@ -116,10 +116,10 @@ This file is the execution baseline for next implementation cycles.
 ---
 
 ## Immediate Next Sprint (Recommended Execution Order)
-1. Complete Priority 0.1 (real device matrix).
-2. Complete Priority 0.2 (migration reproducibility).
-3. Complete Priority 0.3 (env + secrets hygiene).
-4. Start Priority 1.4 (API resilience safeguards).
+1. Complete Priority 0.1 (real device matrix on physical iPhone).
+2. Complete Priority 0.2 verification in Docker-enabled environment (`prisma:deploy` + API boot check).
+3. Complete Priority 1.6 (iOS runtime reliability sweep on physical device).
+4. Run one release rehearsal using `docs/release-runbook.md` before public production.
 
 ---
 
