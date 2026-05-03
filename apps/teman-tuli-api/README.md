@@ -66,6 +66,9 @@ Base path: `/api/v1`
    npm run dev
    ```
 
+Environment and secret policy is documented in:
+- `docs/environment-secrets.md`
+
 ## Migration Reproducibility Check (Priority 0.2)
 Use this sequence to verify clean-database bootstrap from committed migration files only.
 
