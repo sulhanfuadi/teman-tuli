@@ -48,6 +48,11 @@ Base path: `/api/v1`
 - Standardized error envelope:
   - `{ message, code, requestId, details? }`
 
+## Observability Baseline (Priority 1.5)
+- Correlation ID propagation via `x-correlation-id` header.
+- Structured triage logs for completed and failed requests.
+- Monitoring and alerting rollout plan in `docs/observability-baseline.md`.
+
 ## Privacy Defaults
 - Transcripts are private by default.
 - Sessions are scoped to the authenticated user.
