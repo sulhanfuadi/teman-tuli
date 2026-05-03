@@ -66,6 +66,60 @@ Base path: `/api/v1`
    npm run dev
    ```
 
+## Migration Reproducibility Check (Priority 0.2)
+Use this sequence to verify clean-database bootstrap from committed migration files only.
+
+### Preconditions
+- Docker is installed and available in PATH.
+- `.env` has valid `DATABASE_URL` and `JWT_SECRET`.
+
+### Clean Bootstrap Sequence
+```bash
+docker compose down -v
+docker compose up -d
+npm install
+npm run prisma:generate
+npm run prisma:deploy
+```
+
+Expected migration output should include these indicators:
+- `Prisma schema loaded from prisma/schema.prisma`
+- `Datasource "db": PostgreSQL database "teman_tuli"`
+- `1 migration found in prisma/migrations`
+- `The following migration(s) have been applied:`
+- `0001_init`
+- `All migrations have been successfully applied.`
+
+### API Boot Check (No ad-hoc schema drift)
+Start API immediately after `prisma:deploy` without `prisma migrate dev`:
+
+```bash
+npm run dev
+```
+
+In a second terminal:
+
+```bash
+curl http://localhost:3000/health
+```
+
+Expected response:
+
+```json
+{"ok":true,"service":"teman-tuli-backend"}
+```
+
+### Drift Guard Rule
+- Production-like bootstrap must only use committed migrations via `npm run prisma:deploy`.
+- Do not rely on local-only schema changes or `prisma db push`.
+
+### Local Verification Evidence (2026-05-03)
+- `npm run prisma:deploy` was executed in this workspace and failed at schema engine stage because local PostgreSQL service was unavailable.
+- `docker` command is not installed in this runtime, so clean DB reset could not be executed here.
+- Backend quality gate still passed locally:
+  - `npm test` ✅
+  - `npm run build` ✅
+
 ## Testing
 ```bash
 npm test
