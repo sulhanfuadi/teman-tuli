@@ -57,6 +57,7 @@ Base path: `/api/v1`
 - Transcripts are private by default.
 - Sessions are scoped to the authenticated user.
 - Live caption text is uploaded only after the user explicitly saves a session.
+- Transcript retention is manual-delete only in v1: data remains until the owner deletes it through the app flow.
 
 ## Setup
 1. Copy env file:

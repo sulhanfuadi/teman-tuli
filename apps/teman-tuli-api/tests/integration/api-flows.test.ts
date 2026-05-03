@@ -106,6 +106,42 @@ describe('Teman Tuli API flows', () => {
     expect(forbiddenResponse.statusCode).toBe(404);
   });
 
+  it('prevents another user from mutating a private transcript', async () => {
+    const forbiddenUpdate = await app.inject({
+      method: 'PATCH',
+      url: `/api/v1/sessions/${sessionId}`,
+      headers: { authorization: `Bearer ${otherToken}` },
+      payload: { notes: 'Unauthorized note update' }
+    });
+
+    expect(forbiddenUpdate.statusCode).toBe(404);
+
+    const forbiddenFeedback = await app.inject({
+      method: 'POST',
+      url: `/api/v1/sessions/${sessionId}/feedback`,
+      headers: { authorization: `Bearer ${otherToken}` },
+      payload: { rating: 'POOR', comment: 'Unauthorized feedback' }
+    });
+
+    expect(forbiddenFeedback.statusCode).toBe(404);
+
+    const forbiddenDelete = await app.inject({
+      method: 'DELETE',
+      url: `/api/v1/sessions/${sessionId}`,
+      headers: { authorization: `Bearer ${otherToken}` }
+    });
+
+    expect(forbiddenDelete.statusCode).toBe(404);
+
+    const ownerStillHasSession = await app.inject({
+      method: 'GET',
+      url: `/api/v1/sessions/${sessionId}`,
+      headers: { authorization: `Bearer ${token}` }
+    });
+
+    expect(ownerStillHasSession.statusCode).toBe(200);
+  });
+
   it('deletes private transcript sessions', async () => {
     const deleteResponse = await app.inject({
       method: 'DELETE',
