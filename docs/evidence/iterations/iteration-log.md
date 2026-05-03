@@ -49,3 +49,8 @@
 - Input: Need faster incident diagnosis with consistent request tracing and triage metadata.
 - Change: Added correlation-ID propagation, structured request lifecycle logs, and documented monitoring rollout plan.
 - Why: Reduce debugging guesswork and speed up operational response for backend incidents.
+
+## Iteration 11 — Priority 2.7-2.9 Launch Readiness
+- Input: Need launch-grade safeguards for privacy policy clarity, CI gate enforcement, and repeatable release operations.
+- Change: Added retention policy note, expanded cross-user authorization negative tests, added PR CI workflow, and added release/rollback runbook.
+- Why: Ensure launch claims are backed by runtime verification and repeatable operational procedures.

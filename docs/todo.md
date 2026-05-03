@@ -84,21 +84,34 @@ This file is the execution baseline for next implementation cycles.
 ## Priority 2 — Launch Readiness
 
 ### 7) Security & Privacy Readiness Check
-- [ ] Confirm private-by-default behavior remains intact across all flows.
-- [ ] Add explicit retention/deletion policy note for transcript data.
-- [ ] Validate user-scoped authorization boundaries with negative tests.
+- [x] Confirm private-by-default behavior remains intact across all flows. (`2026-05-03`)
+- [x] Add explicit retention/deletion policy note for transcript data. (`2026-05-03`)
+- [x] Validate user-scoped authorization boundaries with negative tests. (`2026-05-03`)
 - **Done when:** privacy claims in docs match runtime behavior.
 
+#### P2.7 Completion Notes (Date-Stamped)
+- `2026-05-03`: Added explicit v1 retention policy (manual delete only) in backend README.
+- `2026-05-03`: Extended negative authorization tests for cross-user `PATCH`, `DELETE`, and `POST /feedback` access attempts.
+- `2026-05-03`: Re-validated backend quality gates (`npm test`, `npm run build`).
+
 ### 8) CI Baseline (Quality Gate)
-- [ ] Add CI workflow to run backend `npm test` + `npm run build` on pull requests.
-- [ ] Add status badge and failure troubleshooting notes.
+- [x] Add CI workflow to run backend `npm test` + `npm run build` on pull requests. (`2026-05-03`)
+- [x] Add status badge and failure troubleshooting notes. (`2026-05-03`)
 - **Done when:** regressions are automatically blocked before merge.
 
+#### P2.8 Completion Notes (Date-Stamped)
+- `2026-05-03`: Added GitHub Actions workflow `.github/workflows/backend-ci.yml` for PR quality gate.
+- `2026-05-03`: Added backend CI badge and troubleshooting section in `apps/teman-tuli-api/README.md`.
+
 ### 9) Release Runbook
-- [ ] Create release checklist (pre-flight, migration, smoke test, rollback triggers).
-- [ ] Define rollback steps for DB migration and API release.
-- [ ] Add post-release verification checklist.
+- [x] Create release checklist (pre-flight, migration, smoke test, rollback triggers). (`2026-05-03`)
+- [x] Define rollback steps for DB migration and API release. (`2026-05-03`)
+- [x] Add post-release verification checklist. (`2026-05-03`)
 - **Done when:** release can be repeated by another engineer without tribal knowledge.
+
+#### P2.9 Completion Notes (Date-Stamped)
+- `2026-05-03`: Added operational release runbook in `docs/release-runbook.md`.
+- `2026-05-03`: Included pre-flight, migration sequence, smoke checks, rollback triggers, DB+API rollback, and post-release verification.
 
 ---
 
