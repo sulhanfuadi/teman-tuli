@@ -1,35 +1,73 @@
-# Device Test Matrix — 7-Day Sprint
+# Device Test Matrix — Priority 0.1 Validation
 
 ## Objective
-Validate core flow on physical iPhone and capture actionable quality evidence for demo readiness.
+Validate core flow on physical iPhone and capture actionable quality evidence for production-readiness decision.
 
-## Environment Matrix
-| Environment | Session | Duration | Readability (1-5) | Continuity (1-5) | Save Success | Confidence (1-5) | Notes |
-|---|---:|---:|---:|---:|---|---:|---|
-| Quiet room | 1 | 1-3 min | - | - | - | - | Pending device test |
-| Quiet room | 2 | 1-3 min | - | - | - | - | Pending device test |
-| Quiet room | 3 | 1-3 min | - | - | - | - | Pending device test |
-| Moderate classroom noise | 1 | 1-3 min | - | - | - | - | Pending device test |
-| Moderate classroom noise | 2 | 1-3 min | - | - | - | - | Pending device test |
-| Moderate classroom noise | 3 | 1-3 min | - | - | - | - | Pending device test |
-| Noisy room | 1 | 1-3 min | - | - | - | - | Pending device test |
-| Noisy room | 2 | 1-3 min | - | - | - | - | Pending device test |
-| Noisy room | 3 | 1-3 min | - | - | - | - | Pending device test |
+## Completion Gate (Must Pass)
+- All 9 sessions are filled with non-placeholder values.
+- Mandatory E2E checklist is evidenced with pass/fail and notes.
+- Critical failures are either resolved or have mitigation + reproducible steps.
+- Unknown critical behavior count is `0`.
 
-## Mandatory E2E Checklist
-- [ ] Register success
-- [ ] Login success
-- [ ] Login fail state shown clearly
-- [ ] Start caption works normally
-- [ ] Stop caption works normally
-- [ ] Empty transcript save blocked with clear message
-- [ ] Private save success and item appears in archive
-- [ ] Session detail loads correctly
-- [ ] Notes update works
-- [ ] Feedback submit works
-- [ ] Unauthorized state forces re-login path (auth expired)
-- [ ] Network error shows recovery action
+## Scoring Guide (Use Consistently)
+- **Readability (1-5):** 1 = mostly unreadable, 3 = readable with frequent strain, 5 = easy to read continuously.
+- **Continuity (1-5):** 1 = frequent drops/stalls, 3 = occasional gaps, 5 = stable continuous updates.
+- **Confidence (1-5):** 1 = untrusted output, 3 = mixed reliability, 5 = reliable enough for classroom following.
+
+## Environment Matrix (9 Sessions)
+| Batch | Environment | Session | Duration | Readability (1-5) | Continuity (1-5) | Save Success | Confidence (1-5) | Permission Edge Case | Interruption Behavior | Save Retry Outcome | Evidence Notes |
+|---|---|---:|---:|---:|---:|---|---:|---|---|---|---|
+| Quiet | Quiet room | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Quiet | Quiet room | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Quiet | Quiet room | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Moderate | Moderate classroom noise | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Moderate | Moderate classroom noise | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Moderate | Moderate classroom noise | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Noisy | Noisy room | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Noisy | Noisy room | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Noisy | Noisy room | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+
+## Batch Evidence Submission Format
+Use this exact format when reporting each 3-session batch:
+
+### Batch `<Quiet|Moderate|Noisy>` — `<YYYY-MM-DD>`
+- Session 1 summary:
+- Session 2 summary:
+- Session 3 summary:
+- E2E checklist delta (newly verified items only):
+- Failure modes found (if any):
+- Open unknowns after batch:
+
+## Mandatory E2E Checklist (Pass/Fail + Notes)
+| Checkpoint | Status | Notes |
+|---|---|---|
+| Register success | Pending | - |
+| Login success | Pending | - |
+| Login fail state shown clearly | Pending | - |
+| Start caption works normally | Pending | - |
+| Stop caption works normally | Pending | - |
+| Empty transcript save blocked with clear message | Pending | - |
+| Private save success and item appears in archive | Pending | - |
+| Session detail loads correctly | Pending | - |
+| Notes update works | Pending | - |
+| Feedback submit works | Pending | - |
+| Unauthorized state forces re-login path (auth expired) | Pending | - |
+| Network error shows recovery action | Pending | - |
+
+## Critical Failure Mode Taxonomy
+| Category | Severity | Definition | Required Capture |
+|---|---|---|---|
+| Auth Flow Failure | Critical | User cannot enter or recover session | exact step, screen state, error text, workaround |
+| Caption Session Dead-End | Critical | Start/stop path cannot continue safely | trigger condition, visible UI state, recovery success |
+| Save/Data Integrity Issue | Critical | transcript cannot be saved/retrieved correctly | payload/action, retry count, final persisted state |
+| Permission Handling Regression | High | denied/restricted permission creates broken UX | permission state, prompt behavior, guidance quality |
+| Interruption Recovery Failure | High | call/background interruption leaves stale state | interruption type, app state transition, recovery result |
+
+## Unknowns Tracker (Must Be Empty at Done)
+| ID | Description | Severity | Discovered In | Owner | Mitigation Plan | Status |
+|---|---|---|---|---|---|---|
+| U-001 | Placeholder row — replace with real unknowns if found | None | N/A | QA owner | Remove if no unknowns remain | Open |
 
 ## Current Status
-- Matrix template and acceptance checklist are ready.
-- Physical device execution is pending user run this week.
+- `2026-05-03`: Matrix upgraded for Priority 0.1 execution.
+- Physical device execution is pending first Quiet batch.
