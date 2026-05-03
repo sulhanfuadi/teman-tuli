@@ -2,9 +2,16 @@
 
 This file is the execution baseline for next implementation cycles.
 
+_Last updated: 2026-05-04 (Asia/Jakarta)_
+
+## Current Status Snapshot
+- **Completed:** P0.2, P0.3, P1.4, P1.5, P2.7, P2.8, P2.9.
+- **In progress / pending:** P0.1 and P1.6 (real-device reliability expansion).
+- **Current MVP scope status:** simulator-validated baseline + backend launch-readiness checklist complete.
+
 ## How to Use
 - Execute from top to bottom by priority.
-- Do not start a lower-priority item before the blocker in higher priority is done.
+- Do not start a lower-priority item before blocker items are resolved.
 - Mark status with `[ ]` / `[x]` and append date notes when completed.
 
 ---
@@ -24,6 +31,7 @@ This file is the execution baseline for next implementation cycles.
 - `2026-05-03`: Milestone 2 started — batch validation ledger added for quality evidence capture.
 - `2026-05-03`: Milestone 3 prep complete — closure protocol documented for current simulator-first MVP validation.
 - `2026-05-03`: Added simulator pre-validation template (`docs/evidence/iterations/simulator-prevalidation.md`) to keep progress moving while iPhone access is unavailable.
+- `2026-05-04`: iOS toolchain + simulator runtime setup completed; project build is green in simulator environment as pre-validation support.
 
 ### 2) Backend Migration Reproducibility Check
 - [x] Verify baseline migration applies from clean DB using committed migration files. (`2026-05-03`)
@@ -81,8 +89,9 @@ This file is the execution baseline for next implementation cycles.
 - [ ] Confirm user-facing guidance is clear in all fallback states.
 - **Done when:** caption flow recovers safely and consistently in real usage.
 
-#### P1.6 Validation Note
-- Current MVP validation uses simulator evidence as baseline; real-device runtime sweep can be added as an expansion phase.
+#### P1.6 Validation Notes
+- `2026-05-03`: Simulator-first evidence path added as current MVP baseline (`docs/evidence/iterations/simulator-prevalidation.md`).
+- `2026-05-04`: Local Xcode + iOS Simulator runtime prepared; simulator build currently passes (`BUILD SUCCEEDED`) for `TemanTuli`.
 
 ---
 
@@ -121,10 +130,10 @@ This file is the execution baseline for next implementation cycles.
 ---
 
 ## Immediate Next Sprint (Recommended Execution Order)
-1. Complete and attach simulator evidence in `docs/evidence/iterations/simulator-prevalidation.md`.
-2. Run one release rehearsal using `docs/release-runbook.md`.
-3. Execute pre-flight and smoke checklist before public demo/pilot.
-4. Schedule optional real-device expansion pass for additional reliability confidence.
+1. Complete simulator evidence entries in `docs/evidence/iterations/simulator-prevalidation.md` for all mandatory MVP flows.
+2. Run one release rehearsal using `docs/release-runbook.md` and capture findings.
+3. Execute one physical iPhone runtime sweep for P1.6 interruption and recovery behavior.
+4. Execute 9-session real-device validation matrix for P0.1 and close unknown tracker.
 
 ---
 
@@ -132,4 +141,4 @@ This file is the execution baseline for next implementation cycles.
 - Keep API contract under `/api/v1` unless change is strictly necessary.
 - Prioritize reliability over new features.
 - Keep transcript privacy defaults unchanged.
-- MVP status is simulator-validated for current scope.
+- Treat simulator validation as baseline evidence; treat real-device validation as expansion required before public production.
