@@ -66,8 +66,9 @@ Use this exact format when reporting each 3-session batch:
 ## Unknowns Tracker (Must Be Empty at Done)
 | ID | Description | Severity | Discovered In | Owner | Mitigation Plan | Status |
 |---|---|---|---|---|---|---|
-| U-001 | Placeholder row — replace with real unknowns if found | None | N/A | QA owner | Remove if no unknowns remain | Open |
+| _No open unknowns yet_ | - | - | - | - | - | - |
 
 ## Current Status
 - `2026-05-03`: Matrix upgraded for Priority 0.1 execution.
+- `2026-05-03`: Unknowns tracker reset to neutral baseline (no pre-filled open items).
 - Physical device execution is pending first Quiet batch.

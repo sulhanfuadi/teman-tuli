@@ -22,6 +22,7 @@ This file is the execution baseline for next implementation cycles.
 #### P0.1 Milestone Progress (Date-Stamped)
 - `2026-05-03`: Milestone 1 complete — matrix and runbook hardened with explicit scoring, failure taxonomy, and unknown tracker.
 - `2026-05-03`: Milestone 2 started — batch validation ledger added; waiting physical iPhone evidence for Quiet/Moderate/Noisy.
+- `2026-05-03`: Milestone 3 prep complete — closure protocol documented; final completion still blocked on real-device execution evidence.
 
 ### 2) Backend Migration Reproducibility Check
 - [ ] Verify baseline migration applies from clean DB using committed migration files.
