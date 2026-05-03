@@ -23,6 +23,7 @@ This file is the execution baseline for next implementation cycles.
 - `2026-05-03`: Milestone 1 complete — matrix and runbook hardened with explicit scoring, failure taxonomy, and unknown tracker.
 - `2026-05-03`: Milestone 2 started — batch validation ledger added; waiting physical iPhone evidence for Quiet/Moderate/Noisy.
 - `2026-05-03`: Milestone 3 prep complete — closure protocol documented; final completion still blocked on real-device execution evidence.
+- `2026-05-03`: Added simulator pre-validation template (`docs/evidence/iterations/simulator-prevalidation.md`) to keep progress moving while iPhone access is unavailable.
 
 ### 2) Backend Migration Reproducibility Check
 - [ ] Verify baseline migration applies from clean DB using committed migration files.
@@ -78,6 +79,9 @@ This file is the execution baseline for next implementation cycles.
 - [ ] Verify no stale recording state after interruption recovery.
 - [ ] Confirm user-facing guidance is clear in all fallback states.
 - **Done when:** caption flow recovers safely and consistently in real usage.
+
+#### P1.6 Blocker Note
+- Physical iPhone is currently unavailable; simulator evidence can be collected, but it cannot replace physical-device runtime validation.
 
 ---
 

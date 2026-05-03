@@ -54,3 +54,8 @@
 - Input: Need launch-grade safeguards for privacy policy clarity, CI gate enforcement, and repeatable release operations.
 - Change: Added retention policy note, expanded cross-user authorization negative tests, added PR CI workflow, and added release/rollback runbook.
 - Why: Ensure launch claims are backed by runtime verification and repeatable operational procedures.
+
+## Iteration 12 — Simulator Evidence Bridge
+- Input: Physical iPhone access is unavailable, but execution evidence progress must continue.
+- Change: Added simulator pre-validation evidence template and linked it from evidence index and TODO blocker notes.
+- Why: Keep documentation and review readiness moving without falsely claiming real-device sign-off.
