@@ -74,3 +74,8 @@
 - Input: MVP flow needed factual iOS execution evidence while real-device sessions were still pending.
 - Change: Completed a full simulator run with successful build+launch evidence and checked core UI flow coverage in simulator pre-validation.
 - Why: Close Phase 1 baseline validation with objective artifacts while keeping real-device gates explicitly open.
+
+## Iteration 16 — Release Rehearsal Evidence Capture
+- Input: Need objective release-readiness proof before claiming launch-prep completion.
+- Change: Executed local runbook rehearsal with quality gates, clean migration bootstrap, and API health validation; documented simulated parity boundaries explicitly.
+- Why: Ensure operational readiness claims are auditable and do not overstate unexecuted hosted checks.

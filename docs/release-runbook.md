@@ -63,3 +63,6 @@ Rollback is required if one or more conditions occur:
 - [ ] Migration execution logs
 - [ ] Smoke test evidence
 - [ ] Rollback evidence (if triggered)
+
+## 8) Latest Rehearsal Evidence
+- `docs/evidence/iterations/release-rehearsal-2026-05-04.md`
