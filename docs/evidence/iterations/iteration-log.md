@@ -69,3 +69,8 @@
 - Input: Docker runtime became available via local setup (`docker` + `colima` + compose plugin).
 - Change: Executed automated verifier script successfully: clean volume reset, committed migration deployment, and API health confirmation.
 - Why: Close migration reproducibility risk before public production readiness.
+
+## Iteration 15 — Simulator Build & Baseline Evidence Completion
+- Input: MVP flow needed factual iOS execution evidence while real-device sessions were still pending.
+- Change: Completed a full simulator run with successful build+launch evidence and checked core UI flow coverage in simulator pre-validation.
+- Why: Close Phase 1 baseline validation with objective artifacts while keeping real-device gates explicitly open.

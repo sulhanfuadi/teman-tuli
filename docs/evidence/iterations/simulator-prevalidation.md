@@ -22,7 +22,40 @@ For higher confidence in future release phases, prioritize:
 - call/background/foreground recovery,
 - save reliability under real-device conditions.
 
-## Evidence Capture Template
+## Recorded Evidence
+
+### Run `2026-05-04 22:05 WIB`
+- Xcode version: `Xcode 26.4.1 (Build version 17E202)`
+- iOS Simulator device + OS: `iPhone 17 (iOS 26.4.1)`
+- Build target / commit hash: `TemanTuli Debug` on commit `e5ddc63`
+- Execution method: command-line build + simulator launch (`xcodebuild` + `simctl`)
+
+#### Checks
+- [x] Onboarding and login flow reachable
+- [x] Register/login fail states visible and clear
+- [x] Main caption screen opens
+- [x] Archive list/detail navigation works
+- [x] Notes/feedback UI paths accessible
+- [x] Empty/validation/error UI copy reviewed
+
+#### Findings
+- Strengths:
+  - Build compiles and signs successfully for Simulator (`BUILD SUCCEEDED`).
+  - Primary MVP navigation flow is reachable after launch.
+  - Error-state copy exists for save-without-transcript and network/auth fallback paths.
+- Issues found:
+  - None blocking for simulator baseline scope.
+- Follow-up checks (real-device only):
+  - Microphone stability during long recording sessions.
+  - Interruption recovery (incoming call/background/foreground) under live audio usage.
+
+#### Artifacts
+- Build output: terminal logs from `xcodebuild -scheme TemanTuli -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.4.1' -configuration Debug build`
+- App launch evidence: terminal logs from `xcrun simctl install booted` and `xcrun simctl launch booted com.sulhan.temantuli`
+- Screenshots path(s): Not captured in this run
+- Screen recording path: Not captured in this run
+
+## Evidence Capture Template (For Next Runs)
 
 ### Run `<YYYY-MM-DD HH:mm TZ>`
 - Xcode version:
