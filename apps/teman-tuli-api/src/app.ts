@@ -27,6 +27,8 @@ export const buildApp = async (repositories?: Repositories): Promise<FastifyInst
     global: false,
     hook: 'preHandler',
     errorResponseBuilder: (request) => ({
+      statusCode: 429,
+      error: 'Too Many Requests',
       message: 'Too many requests',
       code: 'RATE_LIMITED',
       requestId: request.id

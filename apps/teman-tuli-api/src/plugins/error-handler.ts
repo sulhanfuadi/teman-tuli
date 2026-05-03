@@ -1,12 +1,15 @@
 import type { FastifyInstance } from 'fastify';
 import { sendApiError } from '../utils/api-error.js';
 
+const mapFastifyCode = (code: unknown): string | undefined => {
+  if (code === 'FST_ERR_VALIDATION') return 'VALIDATION_ERROR';
+  if (code === 'FST_ERR_CTP_BODY_TOO_LARGE') return 'PAYLOAD_TOO_LARGE';
+  if (code === 'FST_ERR_RATE_LIMIT') return 'RATE_LIMITED';
+  return undefined;
+};
+
 export const registerErrorHandler = (app: FastifyInstance) => {
   app.setErrorHandler((error, request, reply) => {
-    if (reply.sent) {
-      return;
-    }
-
     const errorCode = (error as { code?: string }).code;
     const statusCode = (error as { statusCode?: number }).statusCode;
     const validation = (error as { validation?: unknown }).validation;
@@ -76,5 +79,48 @@ export const registerErrorHandler = (app: FastifyInstance) => {
       message: 'Internal server error',
       code: 'INTERNAL_ERROR'
     });
+  });
+
+  app.addHook('onSend', async (request, reply, payload) => {
+    if (reply.statusCode < 400 || typeof payload !== 'string') {
+      return payload;
+    }
+
+    try {
+      const parsed = JSON.parse(payload) as Record<string, unknown>;
+      const normalizedCode =
+        mapFastifyCode(parsed.code) ??
+        (reply.statusCode === 413
+          ? 'PAYLOAD_TOO_LARGE'
+          : reply.statusCode === 429
+            ? 'RATE_LIMITED'
+            : reply.statusCode === 401
+              ? 'UNAUTHORIZED'
+              : reply.statusCode === 404
+                ? 'NOT_FOUND'
+                : reply.statusCode === 409
+                  ? 'CONFLICT'
+                  : reply.statusCode === 400
+                    ? 'VALIDATION_ERROR'
+                    : undefined);
+
+      if (!normalizedCode && parsed.requestId) {
+        return payload;
+      }
+
+      const normalizedPayload: Record<string, unknown> = {
+        ...parsed,
+        code: normalizedCode ?? parsed.code,
+        requestId: parsed.requestId ?? request.id
+      };
+
+      if (!normalizedPayload.details && Array.isArray(parsed.validation)) {
+        normalizedPayload.details = parsed.validation;
+      }
+
+      return JSON.stringify(normalizedPayload);
+    } catch {
+      return payload;
+    }
   });
 };
