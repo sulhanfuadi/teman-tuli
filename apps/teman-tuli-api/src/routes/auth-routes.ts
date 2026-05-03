@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { AuthService } from '../services/auth-service.js';
+import { sendApiError } from '../utils/api-error.js';
 
 const registerSchema = z.object({
   name: z.string().min(2),
@@ -18,6 +19,13 @@ export const registerAuthRoutes = async (app: FastifyInstance) => {
   const authService = new AuthService(app.repos);
 
   app.post('/auth/register', {
+    bodyLimit: 16 * 1024,
+    config: {
+      rateLimit: {
+        max: 8,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       tags: ['Auth'],
       body: {
@@ -34,7 +42,12 @@ export const registerAuthRoutes = async (app: FastifyInstance) => {
   }, async (request, reply) => {
     const parsed = registerSchema.safeParse(request.body);
     if (!parsed.success) {
-      return reply.code(400).send({ message: parsed.error.flatten() });
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid request payload',
+        code: 'VALIDATION_ERROR',
+        details: parsed.error.flatten()
+      });
     }
 
     try {
@@ -43,13 +56,24 @@ export const registerAuthRoutes = async (app: FastifyInstance) => {
       return reply.code(201).send({ user, token });
     } catch (error) {
       if (error instanceof Error && error.message === 'EMAIL_ALREADY_USED') {
-        return reply.code(409).send({ message: 'Email already used' });
+        return sendApiError(reply, {
+          statusCode: 409,
+          message: 'Email already used',
+          code: 'CONFLICT'
+        });
       }
       throw error;
     }
   });
 
   app.post('/auth/login', {
+    bodyLimit: 16 * 1024,
+    config: {
+      rateLimit: {
+        max: 8,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       tags: ['Auth'],
       body: {
@@ -64,7 +88,12 @@ export const registerAuthRoutes = async (app: FastifyInstance) => {
   }, async (request, reply) => {
     const parsed = loginSchema.safeParse(request.body);
     if (!parsed.success) {
-      return reply.code(400).send({ message: parsed.error.flatten() });
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid request payload',
+        code: 'VALIDATION_ERROR',
+        details: parsed.error.flatten()
+      });
     }
 
     try {
@@ -73,7 +102,11 @@ export const registerAuthRoutes = async (app: FastifyInstance) => {
       return reply.send({ user, token });
     } catch (error) {
       if (error instanceof Error && error.message === 'INVALID_CREDENTIALS') {
-        return reply.code(401).send({ message: 'Invalid credentials' });
+        return sendApiError(reply, {
+          statusCode: 401,
+          message: 'Invalid credentials',
+          code: 'UNAUTHORIZED'
+        });
       }
       throw error;
     }

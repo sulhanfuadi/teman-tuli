@@ -1,10 +1,11 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { SessionService } from '../services/session-service.js';
 import { getUserId } from '../utils/auth.js';
+import { sendApiError } from '../utils/api-error.js';
 
 const segmentSchema = z.object({
-  text: z.string().min(1),
+  text: z.string().min(1).max(300),
   startMs: z.number().int().min(0),
   endMs: z.number().int().min(0).nullable().optional()
 });
@@ -13,11 +14,11 @@ const createSessionSchema = z.object({
   title: z.string().min(2).max(120),
   className: z.string().max(120).nullable().optional(),
   languageCode: z.string().min(2).default('id-ID'),
-  fullText: z.string().min(1),
+  fullText: z.string().min(1).max(20_000),
   notes: z.string().max(1000).nullable().optional(),
   startedAt: z.string().datetime(),
   endedAt: z.string().datetime(),
-  segments: z.array(segmentSchema).default([])
+  segments: z.array(segmentSchema).max(500).default([])
 });
 
 const updateSessionSchema = z.object({
@@ -33,6 +34,24 @@ const feedbackSchema = z.object({
 
 const paramsSchema = z.object({ id: z.string().min(1) });
 
+const writeRateLimit = {
+  max: 30,
+  timeWindow: '1 minute',
+  keyGenerator: (request: FastifyRequest) => {
+    const user = request.user;
+    const userId =
+      user &&
+      typeof user === 'object' &&
+      !Buffer.isBuffer(user) &&
+      'sub' in user &&
+      typeof user.sub === 'string'
+        ? user.sub
+        : undefined;
+
+    return userId ? `user:${userId}` : `ip:${request.ip}`;
+  }
+};
+
 export const registerSessionRoutes = async (app: FastifyInstance) => {
   const service = new SessionService(app.repos);
 
@@ -45,6 +64,10 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
   }, async (request) => service.listSessions(getUserId(request)));
 
   app.post('/sessions', {
+    bodyLimit: 512 * 1024,
+    config: {
+      rateLimit: writeRateLimit
+    },
     preHandler: [app.authenticate],
     schema: {
       tags: ['Transcript Sessions'],
@@ -52,7 +75,14 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
     }
   }, async (request, reply) => {
     const parsed = createSessionSchema.safeParse(request.body);
-    if (!parsed.success) return reply.code(400).send({ message: parsed.error.flatten() });
+    if (!parsed.success) {
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid request payload',
+        code: 'VALIDATION_ERROR',
+        details: parsed.error.flatten()
+      });
+    }
 
     try {
       const session = await service.createSession({
@@ -69,7 +99,11 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
       return reply.code(201).send(session);
     } catch (error) {
       if (error instanceof Error && ['EMPTY_TRANSCRIPT', 'INVALID_TIME_RANGE'].includes(error.message)) {
-        return reply.code(400).send({ message: error.message });
+        return sendApiError(reply, {
+          statusCode: 400,
+          message: error.message,
+          code: 'BAD_REQUEST'
+        });
       }
       throw error;
     }
@@ -83,19 +117,34 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
     }
   }, async (request, reply) => {
     const params = paramsSchema.safeParse(request.params);
-    if (!params.success) return reply.code(400).send({ message: 'Invalid session id' });
+    if (!params.success) {
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid session id',
+        code: 'VALIDATION_ERROR',
+        details: params.error.flatten()
+      });
+    }
 
     try {
       return await service.getSession(params.data.id, getUserId(request));
     } catch (error) {
       if (error instanceof Error && error.message === 'SESSION_NOT_FOUND') {
-        return reply.code(404).send({ message: 'Session not found' });
+        return sendApiError(reply, {
+          statusCode: 404,
+          message: 'Session not found',
+          code: 'NOT_FOUND'
+        });
       }
       throw error;
     }
   });
 
   app.patch('/sessions/:id', {
+    bodyLimit: 64 * 1024,
+    config: {
+      rateLimit: writeRateLimit
+    },
     preHandler: [app.authenticate],
     schema: {
       tags: ['Transcript Sessions'],
@@ -104,19 +153,36 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
   }, async (request, reply) => {
     const params = paramsSchema.safeParse(request.params);
     const body = updateSessionSchema.safeParse(request.body);
-    if (!params.success || !body.success) return reply.code(400).send({ message: 'Invalid request' });
+    if (!params.success || !body.success) {
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid request payload',
+        code: 'VALIDATION_ERROR',
+        details: {
+          params: params.success ? undefined : params.error.flatten(),
+          body: body.success ? undefined : body.error.flatten()
+        }
+      });
+    }
 
     try {
       return await service.updateSession(params.data.id, getUserId(request), body.data);
     } catch (error) {
       if (error instanceof Error && error.message === 'SESSION_NOT_FOUND') {
-        return reply.code(404).send({ message: 'Session not found' });
+        return sendApiError(reply, {
+          statusCode: 404,
+          message: 'Session not found',
+          code: 'NOT_FOUND'
+        });
       }
       throw error;
     }
   });
 
   app.delete('/sessions/:id', {
+    config: {
+      rateLimit: writeRateLimit
+    },
     preHandler: [app.authenticate],
     schema: {
       tags: ['Transcript Sessions'],
@@ -124,20 +190,35 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
     }
   }, async (request, reply) => {
     const params = paramsSchema.safeParse(request.params);
-    if (!params.success) return reply.code(400).send({ message: 'Invalid session id' });
+    if (!params.success) {
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid session id',
+        code: 'VALIDATION_ERROR',
+        details: params.error.flatten()
+      });
+    }
 
     try {
       await service.deleteSession(params.data.id, getUserId(request));
       return reply.code(204).send();
     } catch (error) {
       if (error instanceof Error && error.message === 'SESSION_NOT_FOUND') {
-        return reply.code(404).send({ message: 'Session not found' });
+        return sendApiError(reply, {
+          statusCode: 404,
+          message: 'Session not found',
+          code: 'NOT_FOUND'
+        });
       }
       throw error;
     }
   });
 
   app.post('/sessions/:id/feedback', {
+    bodyLimit: 64 * 1024,
+    config: {
+      rateLimit: writeRateLimit
+    },
     preHandler: [app.authenticate],
     schema: {
       tags: ['Caption Feedback'],
@@ -146,7 +227,17 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
   }, async (request, reply) => {
     const params = paramsSchema.safeParse(request.params);
     const body = feedbackSchema.safeParse(request.body);
-    if (!params.success || !body.success) return reply.code(400).send({ message: 'Invalid request' });
+    if (!params.success || !body.success) {
+      return sendApiError(reply, {
+        statusCode: 400,
+        message: 'Invalid request payload',
+        code: 'VALIDATION_ERROR',
+        details: {
+          params: params.success ? undefined : params.error.flatten(),
+          body: body.success ? undefined : body.error.flatten()
+        }
+      });
+    }
 
     try {
       const feedback = await service.createFeedback({
@@ -158,7 +249,11 @@ export const registerSessionRoutes = async (app: FastifyInstance) => {
       return reply.code(201).send(feedback);
     } catch (error) {
       if (error instanceof Error && error.message === 'SESSION_NOT_FOUND') {
-        return reply.code(404).send({ message: 'Session not found' });
+        return sendApiError(reply, {
+          statusCode: 404,
+          message: 'Session not found',
+          code: 'NOT_FOUND'
+        });
       }
       throw error;
     }
