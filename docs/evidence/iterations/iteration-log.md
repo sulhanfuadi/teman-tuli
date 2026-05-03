@@ -34,3 +34,8 @@
 - Input: Need deterministic migration bootstrap steps and expected outputs for clean environment checks.
 - Change: Added backend README section for clean DB reset, `prisma:deploy` verification signals, API health validation, and drift guard rule.
 - Why: Ensure another engineer can reproduce migration bootstrap without tribal knowledge.
+
+## Iteration 8 — Priority 0.3 Env & Secret Hygiene
+- Input: Need deterministic env contracts and safer secret handling across dev/staging/prod.
+- Change: Added env/secret policy document, rotation guidance, and tightened runtime env validation outside test mode.
+- Why: Reduce misconfiguration risk and prevent accidental weak-secret defaults in runtime environments.

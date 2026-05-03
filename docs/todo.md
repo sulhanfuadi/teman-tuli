@@ -35,10 +35,15 @@ This file is the execution baseline for next implementation cycles.
 - `2026-05-03`: Local runtime blocker detected (`docker` unavailable), so clean DB reset verification remains pending until Docker-enabled environment is used.
 
 ### 3) Production Environment & Secret Hygiene
-- [ ] Define required env vars for dev/staging/prod (`DATABASE_URL`, `JWT_SECRET`, etc.).
-- [ ] Ensure no sensitive values are hardcoded or committed.
-- [ ] Add deployment-safe env documentation and rotation guidance.
+- [x] Define required env vars for dev/staging/prod (`DATABASE_URL`, `JWT_SECRET`, etc.). (`2026-05-03`)
+- [x] Ensure no sensitive values are hardcoded or committed. (`2026-05-03`)
+- [x] Add deployment-safe env documentation and rotation guidance. (`2026-05-03`)
 - **Done when:** environment setup is deterministic and secret handling is explicit.
+
+#### P0.3 Completion Notes (Date-Stamped)
+- `2026-05-03`: Added `apps/teman-tuli-api/docs/environment-secrets.md` with env matrix and rotation runbook.
+- `2026-05-03`: Hardened `src/config/env.ts` to require `DATABASE_URL` and `JWT_SECRET` outside test runtime.
+- `2026-05-03`: Verified backend quality gates after env hardening: `npm test` and `npm run build` passed.
 
 ---
 
