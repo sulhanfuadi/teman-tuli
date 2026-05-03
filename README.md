@@ -1,78 +1,102 @@
 # Teman Tuli
 
-An accessibility-first app that helps Deaf students follow fast classroom discussions using live captions and private transcript sessions.
+Teman Tuli is an accessibility-first mobile product designed to help Deaf and hard-of-hearing students follow fast classroom discussions through live captions and private transcript sessions.
 
-## Problem
-Many Deaf and hard-of-hearing students lose context in class when:
+## Vision
+Enable more equitable classroom participation by turning spoken class content into readable, user-controlled learning artifacts.
+
+## Problem Context
+In many real classroom situations, Deaf students can lose critical context because:
 - speaking pace is too fast,
-- interpreters are unavailable,
-- shared notes are incomplete or late,
-- important points are discussed spontaneously.
+- discussions overlap and change topic quickly,
+- interpreters are not always available,
+- shared notes are delayed or incomplete.
 
-This directly affects learning quality, confidence, and participation.
+This creates learning inequality, reduces confidence during discussion, and increases cognitive load when students try to reconstruct missed content after class.
 
-## User Research Snapshot
-Research direction is documented in `docs/evidence/research` and is centered on real classroom barriers.
+## Target Users
+Primary users:
+- Deaf and hard-of-hearing university students.
 
-Key interview themes:
-- students need **immediate caption visibility**, not delayed notes,
-- text must be **large, readable, and stable** during discussion,
-- transcript data can contain sensitive classroom content,
-- users want full control over when transcript data is saved.
+Secondary stakeholders:
+- peers in collaborative class discussions,
+- facilitators/lecturers who support accessible learning workflows.
 
-Design decisions from research:
-- live caption is the primary screen,
-- transcript upload is explicit (`Simpan Privat`) and never automatic,
-- archived sessions are private by default.
+## User Research Highlights
+Research artifacts are documented in `docs/evidence/research` and `docs/evidence/iterations`.
+
+Key findings used to shape v1:
+- users need **immediate caption visibility** during class,
+- text must be **large, readable, and stable** on screen,
+- transcript content can include sensitive class information,
+- users require explicit control over when transcript data is saved.
+
+Product decisions from these findings:
+- live caption is the primary interface,
+- transcript persistence is explicit (`Save Private`) and never automatic,
+- archived sessions are private-by-default and user-scoped.
 
 ## SDG Alignment
-Teman Tuli is aligned with:
+Teman Tuli aligns with:
 - **SDG 4 — Quality Education**: improves access to classroom content,
 - **SDG 10 — Reduced Inequalities**: reduces communication barriers for Deaf students,
-- **SDG 3 — Good Health and Well-being** (secondary): reduces stress from missing core learning context.
+- **SDG 3 — Good Health and Well-being** (secondary): reduces stress from repeated context loss.
 
-## Solution Overview
-Teman Tuli provides a simple accessibility loop:
-1. Start live caption in class,
-2. Read captions in a high-visibility interface,
-3. Stop and save transcript only when user chooses,
-4. Revisit private transcript sessions, add notes, and submit caption-quality feedback.
+## Core Product Flow
+1. User starts live caption during class.
+2. User reads high-visibility real-time text.
+3. User stops captioning and explicitly saves transcript.
+4. User reviews transcript session, adds notes, and submits quality feedback.
 
 ## Core Features
 ### iOS App (`apps/teman-tuli-ios`)
-- Onboarding and authentication flow
+- Authentication onboarding flow
 - Live caption using Apple Speech framework
-- Private transcript save flow with explicit user action
-- Transcript archive and session detail view
-- Personal notes and caption feedback submission
+- Accessibility-first caption display
+- Explicit private transcript save
+- Transcript archive and session detail
+- Personal notes and caption quality feedback submission
 
 ### Backend API (`apps/teman-tuli-api`)
-- JWT auth endpoints
+- JWT authentication
 - Private transcript session CRUD
-- Timestamped transcript segments
-- Caption feedback endpoint for iteration evidence
+- Timestamped transcript segment storage
+- Caption feedback endpoint for iterative improvement
 - Versioned routes under `/api/v1`
 
-## Privacy Principles
+## Architecture Overview
+### Client
+- SwiftUI + MVVM
+- Apple `Speech` + `AVFoundation`
+- Privacy-first local-to-server transcript save workflow
+
+### Server
+- Fastify + TypeScript
+- Prisma + PostgreSQL
+- User-scoped query/update/delete behavior for transcript privacy
+
+## Data Model Summary
+Main entities:
+- `User`
+- `TranscriptSession`
+- `TranscriptSegment`
+- `CaptionFeedback`
+
+## Privacy & Trust Principles
 - Private by default
-- No automatic transcript upload during live captioning
-- User-scoped access to saved sessions
-- Explicit save action before any backend persistence
+- No automatic transcript upload during active captioning
+- Explicit user action required before backend persistence
+- User-scoped access for saved sessions
 
-## Tech Stack
-- **iOS**: SwiftUI, MVVM, Speech, AVFoundation
-- **Backend**: Fastify, TypeScript, Prisma, PostgreSQL
-- **Docs/Research**: Markdown evidence pack for iteration and case-study storytelling
-
-## Repository Structure
-- `apps/teman-tuli-ios` — iOS client
+## Monorepo Structure
+- `apps/teman-tuli-ios` — iOS app
 - `apps/teman-tuli-api` — backend API
 - `docs/evidence` — research, case studies, scripts, iteration logs
 - `docs/roadmap-10-weeks.md` — implementation roadmap
 - `AGENTS.md` — repository working instructions for coding agents
 
-## Quick Start
-### Backend API
+## Local Development
+### Backend
 ```bash
 cd apps/teman-tuli-api
 cp .env.example .env
@@ -83,7 +107,7 @@ npm run prisma:migrate -- --name init
 npm run dev
 ```
 
-### iOS App
+### iOS
 ```bash
 cd apps/teman-tuli-ios
 xcodegen generate
@@ -91,13 +115,20 @@ open TemanTuli.xcodeproj
 ```
 
 ## Validation
-Backend validation commands:
+Backend checks:
 ```bash
 cd apps/teman-tuli-api
 npm test
 npm run build
 ```
 
-## Documentation
-- Research & evidence: `docs/evidence/README.md`
-- Product roadmap: `docs/roadmap-10-weeks.md`
+## Current v1 Boundaries
+- Focused on Bahasa Indonesia speech recognition in classroom usage.
+- No public sharing by default (privacy-first scope).
+- No cloud transcription dependency in v1.
+
+## Next Iterations
+- Improve caption robustness in noisy classroom environments.
+- Add consented share-by-class-code workflow.
+- Add export options (PDF/Markdown) for study workflows.
+- Expand co-creation sessions with target users for post-v1 refinement.
