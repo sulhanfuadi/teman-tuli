@@ -6,6 +6,7 @@ import { env } from './config/env.js';
 import { registerSwagger } from './plugins/swagger.js';
 import { registerAuthHook } from './plugins/auth.js';
 import { registerErrorHandler } from './plugins/error-handler.js';
+import { registerObservability } from './plugins/observability.js';
 import { createPrismaRepositories } from './repositories/prisma.js';
 import type { Repositories } from './repositories/interfaces.js';
 import { registerAuthRoutes } from './routes/auth-routes.js';
@@ -38,6 +39,7 @@ export const buildApp = async (repositories?: Repositories): Promise<FastifyInst
 
   app.decorate('repos', repositories ?? createPrismaRepositories());
   registerAuthHook(app);
+  registerObservability(app);
 
   await app.register(async (api) => {
     await registerAuthRoutes(api);
