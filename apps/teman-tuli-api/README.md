@@ -20,6 +20,9 @@ A privacy-first REST API that supports:
 - OpenAPI docs (`/docs` and `docs/openapi.yaml`)
 
 ## API (v1)
+
+Baseline migration is commit-tracked in `prisma/migrations/0001_init`.
+
 Base path: `/api/v1`
 - `POST /auth/register`
 - `POST /auth/login`
@@ -48,12 +51,17 @@ Base path: `/api/v1`
    ```bash
    npm install
    ```
-4. Generate Prisma client + run migrations:
+4. Generate Prisma client + apply committed baseline migration:
    ```bash
    npm run prisma:generate
-   npm run prisma:migrate -- --name init
+   npm run prisma:deploy
    ```
-5. Start dev server:
+
+5. If you change schema locally later, create a new migration with:
+   ```bash
+   npm run prisma:migrate -- --name <change_name>
+   ```
+6. Start dev server:
    ```bash
    npm run dev
    ```

@@ -103,7 +103,7 @@ cp .env.example .env
 docker compose up -d
 npm install
 npm run prisma:generate
-npm run prisma:migrate -- --name init
+npm run prisma:deploy
 npm run dev
 ```
 
