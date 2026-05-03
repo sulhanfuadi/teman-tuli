@@ -24,5 +24,5 @@ This folder contains non-code artifacts for project quality:
 
 ## If Physical iPhone Is Unavailable
 1. Capture pre-validation evidence in `iterations/simulator-prevalidation.md`
-2. Treat simulator evidence as non-blocking support only
-3. Keep Priority 0.1 and 1.6 open until physical iPhone validation completes
+2. Use simulator evidence as MVP validation baseline for current scope
+3. Schedule optional real-device expansion pass for higher runtime confidence

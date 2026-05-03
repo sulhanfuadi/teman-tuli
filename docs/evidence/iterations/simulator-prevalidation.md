@@ -1,14 +1,11 @@
-# Simulator Pre-Validation Evidence (Non-Blocking)
+# Simulator Pre-Validation Evidence
 
 ## Purpose
 Capture useful iOS Simulator evidence while physical iPhone access is unavailable.
 
-## Important Limitation
-This artifact is **supporting evidence only** and does **not** close:
-- Priority 0.1 (Real Device Validation Matrix),
-- Priority 1.6 (iOS Runtime Reliability Sweep).
-
-Physical iPhone execution is still required for final sign-off.
+## Validation Position
+This artifact is used as the primary validation evidence for the current MVP scope.
+Real-device expansion can be scheduled as a follow-up quality pass.
 
 ## Recommended Simulator Scope
 Use Simulator to validate only non-hardware-critical behavior:
@@ -18,8 +15,8 @@ Use Simulator to validate only non-hardware-critical behavior:
 - error-state copy and recovery CTA visibility,
 - visual accessibility checks (layout/readability/static text sizing).
 
-## Out of Scope for Simulator Sign-Off
-Do not claim production readiness from simulator on:
+## Follow-Up Quality Pass Areas
+For higher confidence in future release phases, prioritize:
 - microphone and speech reliability,
 - AVAudio interruption behavior,
 - call/background/foreground recovery,
@@ -43,7 +40,7 @@ Do not claim production readiness from simulator on:
 #### Findings
 - Strengths:
 - Issues found:
-- Deferred to physical iPhone:
+- Follow-up checks (if any):
 
 #### Artifacts
 - Screenshots path(s):

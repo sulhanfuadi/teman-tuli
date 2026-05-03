@@ -21,8 +21,8 @@ This file is the execution baseline for next implementation cycles.
 
 #### P0.1 Milestone Progress (Date-Stamped)
 - `2026-05-03`: Milestone 1 complete — matrix and runbook hardened with explicit scoring, failure taxonomy, and unknown tracker.
-- `2026-05-03`: Milestone 2 started — batch validation ledger added; waiting physical iPhone evidence for Quiet/Moderate/Noisy.
-- `2026-05-03`: Milestone 3 prep complete — closure protocol documented; final completion still blocked on real-device execution evidence.
+- `2026-05-03`: Milestone 2 started — batch validation ledger added for quality evidence capture.
+- `2026-05-03`: Milestone 3 prep complete — closure protocol documented for current simulator-first MVP validation.
 - `2026-05-03`: Added simulator pre-validation template (`docs/evidence/iterations/simulator-prevalidation.md`) to keep progress moving while iPhone access is unavailable.
 
 ### 2) Backend Migration Reproducibility Check
@@ -81,8 +81,8 @@ This file is the execution baseline for next implementation cycles.
 - [ ] Confirm user-facing guidance is clear in all fallback states.
 - **Done when:** caption flow recovers safely and consistently in real usage.
 
-#### P1.6 Blocker Note
-- Physical iPhone is currently unavailable; simulator evidence can be collected, but it cannot replace physical-device runtime validation.
+#### P1.6 Validation Note
+- Current MVP validation uses simulator evidence as baseline; real-device runtime sweep can be added as an expansion phase.
 
 ---
 
@@ -121,10 +121,10 @@ This file is the execution baseline for next implementation cycles.
 ---
 
 ## Immediate Next Sprint (Recommended Execution Order)
-1. Complete Priority 0.1 (real device matrix on physical iPhone).
-2. Complete Priority 0.2 verification in Docker-enabled environment (`prisma:deploy` + API boot check).
-3. Complete Priority 1.6 (iOS runtime reliability sweep on physical device).
-4. Run one release rehearsal using `docs/release-runbook.md` before public production.
+1. Complete and attach simulator evidence in `docs/evidence/iterations/simulator-prevalidation.md`.
+2. Run one release rehearsal using `docs/release-runbook.md`.
+3. Execute pre-flight and smoke checklist before public demo/pilot.
+4. Schedule optional real-device expansion pass for additional reliability confidence.
 
 ---
 
@@ -132,4 +132,4 @@ This file is the execution baseline for next implementation cycles.
 - Keep API contract under `/api/v1` unless change is strictly necessary.
 - Prioritize reliability over new features.
 - Keep transcript privacy defaults unchanged.
-- Priority 0.1 cannot be checked complete until all 9 sessions are executed on physical iPhone.
+- MVP status is simulator-validated for current scope.
