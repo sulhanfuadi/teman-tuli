@@ -29,3 +29,8 @@
 - Input: Priority 0.1 needs objective closure gates and batch-by-batch traceability.
 - Change: Hardened matrix/runbook scoring rules and added P0.1 batch validation ledger with explicit quality gates.
 - Why: Prevent subjective completion claims and keep milestone evidence auditable.
+
+## Iteration 7 — Priority 0.2 Reproducibility Runbook
+- Input: Need deterministic migration bootstrap steps and expected outputs for clean environment checks.
+- Change: Added backend README section for clean DB reset, `prisma:deploy` verification signals, API health validation, and drift guard rule.
+- Why: Ensure another engineer can reproduce migration bootstrap without tribal knowledge.
