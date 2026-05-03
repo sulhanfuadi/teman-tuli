@@ -24,3 +24,8 @@
 - Input: Sprint requires factual quality evidence.
 - Change: Added device test matrix template and execution runbook.
 - Why: Ensure test execution is operational, not only conceptual.
+
+## Iteration 6 — Priority 0.1 Validation Controls
+- Input: Priority 0.1 needs objective closure gates and batch-by-batch traceability.
+- Change: Hardened matrix/runbook scoring rules and added P0.1 batch validation ledger with explicit quality gates.
+- Why: Prevent subjective completion claims and keep milestone evidence auditable.
