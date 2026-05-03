@@ -79,3 +79,8 @@
 - Input: Need objective release-readiness proof before claiming launch-prep completion.
 - Change: Executed local runbook rehearsal with quality gates, clean migration bootstrap, and API health validation; documented simulated parity boundaries explicitly.
 - Why: Ensure operational readiness claims are auditable and do not overstate unexecuted hosted checks.
+
+## Iteration 17 — Real-Device Handoff Pack Finalization
+- Input: Remaining production gate requires real-device execution by human operator without ambiguity.
+- Change: Finalized runbook order, matrix fill rules, copy-paste batch template, and objective closure gates for both P0.1 and P1.6.
+- Why: Make the handoff decision-complete so execution can proceed without additional planning decisions.

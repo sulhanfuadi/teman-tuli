@@ -1,33 +1,47 @@
-# Priority 0.1 Execution Runbook (Real Device)
+# Priority 0.1 + P1.6 Execution Runbook (Real Device)
 
 ## Goal
-Run 9 physical iPhone caption sessions in 3 validated batches and produce objective evidence for Priority 0.1 closure.
+Execute physical iPhone validation with decision-complete evidence for:
+- **P0.1:** 9-session validation matrix closure.
+- **P1.6:** interruption/recovery runtime reliability closure.
 
-## Batch Workflow (Required Order)
-1. Run **Quiet batch** (3 sessions, 1-3 minutes each), then submit evidence.
-2. Run **Moderate batch** (3 sessions), then submit evidence.
-3. Run **Noisy batch** (3 sessions), then submit evidence.
-4. After each batch, update matrix rows, checklist deltas, failure taxonomy, and unknown tracker.
+## Required Execution Order (No Skips)
+1. Follow this runbook (`execution-runbook.md`).
+2. Fill matrix rows live (`device-test-matrix.md`).
+3. Submit batch report (`p0.1-validation-log.md`).
 
-Do not continue to next batch if the current batch has unresolved critical blockers without mitigation notes.
+Do not move to the next batch when unresolved **Critical** failures exist without mitigation notes.
+
+## Time-Boxed Plan (When iPhone Is Available)
+- **T+0 to T+10 min:** pre-run setup.
+- **T+10 to T+35 min:** Quiet batch (3 sessions) + evidence write-up.
+- **T+35 to T+60 min:** Moderate batch (3 sessions) + evidence write-up.
+- **T+60 to T+85 min:** Noisy batch (3 sessions) + evidence write-up.
+- **T+85 to T+100 min:** closure gate check for P0.1 + P1.6.
 
 ## Pre-Run Setup (5-10 min)
-- Ensure backend is running (`apps/teman-tuli-api`).
-- Ensure test account is available (or register quickly in-app).
-- Open app at onboarding/login screen.
-- Prepare short voice script (or live classroom-like source) with stable speaking pace.
-- Confirm microphone/speech permission state before Session 1.
-- Prepare one intentional fallback trigger for each batch:
-  - permission edge-case check,
-  - interruption behavior check,
-  - save retry behavior check.
+- Backend API running and reachable.
+- Test account available (or register during setup).
+- iPhone battery >20%, stable network (Wi-Fi or cellular).
+- App starts from onboarding/login screen.
+- Prepare one speaking script for consistency (~60-90 sec).
+- Prepare one intentional trigger per batch:
+  - permission edge case,
+  - interruption scenario,
+  - save retry scenario.
 
-## Session Execution Protocol (Per Session)
-1. Start at known state (logged-in, caption screen ready).
-2. Run caption for 1-3 minutes.
-3. Stop caption and attempt `Simpan Privat`.
-4. Confirm archive visibility and open detail screen.
-5. Record scores and edge-case outcomes immediately in matrix row.
+## Per-Session Protocol (Use Every Session)
+1. Start from known state (logged in, caption screen ready).
+2. Run captioning for 1-3 minutes.
+3. Stop captioning and attempt `Simpan Privat`.
+4. Verify archive list + detail load.
+5. Record matrix values immediately (no deferred scoring).
+
+## P1.6 Required Interruption Cases (Must Be Covered)
+Across the 9 sessions, ensure all three are executed at least once:
+- Background app transition and return.
+- Audio interruption equivalent (call/audio takeover) and recovery.
+- Resume behavior check: no stale recording state after interruption.
 
 ## Standardized Scoring Instructions
 - **Readability (1-5)**
@@ -49,8 +63,8 @@ Do not continue to next batch if the current batch has unresolved critical block
   - `4`: reliable for most parts.
   - `5`: highly reliable for intended use.
 
-## Mandatory E2E Verification Coverage
-Across the 9 sessions, evidence must cover all items:
+## Mandatory E2E Coverage
+Evidence across all sessions must include:
 - auth success/fail behavior,
 - start/stop caption,
 - empty save guard,
@@ -61,27 +75,32 @@ Across the 9 sessions, evidence must cover all items:
 - auth-expired re-login path,
 - network recovery path.
 
-## Batch Evidence Submission Template
-Use this format when reporting each completed batch:
-
+## Batch Submission Format (Copy-Paste)
 ```md
 ### Batch <Quiet|Moderate|Noisy> — <YYYY-MM-DD>
 - Session 1 summary:
 - Session 2 summary:
 - Session 3 summary:
 - E2E checklist delta (newly verified only):
+- P1.6 interruption coverage delta:
 - Failure modes found:
 - Unknowns still open:
 ```
 
 ## Escalation & Logging Rules
-- Log every critical/high failure into failure taxonomy with reproducible steps.
-- If retry is required, record retry count and final outcome.
-- If behavior is uncertain, add to unknown tracker with owner and mitigation.
-- Unknown critical behavior must be `0` before closing Priority 0.1.
+- Log all High/Critical failures in taxonomy with reproducible steps.
+- Always record retry count for save failures.
+- Unknown behavior must be logged with owner + next action.
+- Unknown **critical** behavior must be `0` before closure.
 
-## Exit Criteria (Priority 0.1)
+## Exit Criteria
+### P0.1 Closure Gate
 - 9 sessions completed with fully populated matrix rows.
-- Mandatory E2E checklist fully evidenced (no pending rows).
+- Mandatory E2E checklist fully evidenced.
 - Critical failures resolved or mitigated with reproducible notes.
-- Unknown tracker contains no critical open items.
+- Unknown tracker has zero critical open items.
+
+### P1.6 Closure Gate
+- Interruption handling validated for call/background/foreground equivalents.
+- No stale recording state observed after interruption recovery.
+- User-facing fallback guidance confirmed clear in interruption/error states.
