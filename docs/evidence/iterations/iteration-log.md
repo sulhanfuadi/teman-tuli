@@ -84,3 +84,8 @@
 - Input: Remaining production gate requires real-device execution by human operator without ambiguity.
 - Change: Finalized runbook order, matrix fill rules, copy-paste batch template, and objective closure gates for both P0.1 and P1.6.
 - Why: Make the handoff decision-complete so execution can proceed without additional planning decisions.
+
+## Iteration 18 — Final Tracking Alignment for Simulator-Ready Phase
+- Input: Need consistent status narrative across TODO and evidence index after Phase 1 closure.
+- Change: Synced TODO + evidence index to show completed non-real-device work, explicit simulator-ready label, and time-boxed next actions for iPhone execution.
+- Why: Prevent readiness ambiguity and keep final production gates focused only on pending real-device proof.

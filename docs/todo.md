@@ -6,8 +6,9 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 
 ## Current Status Snapshot
 - **Completed:** P0.2, P0.3, P1.4, P1.5, P2.7, P2.8, P2.9.
-- **In progress / pending:** P0.1 and P1.6 (real-device reliability expansion).
-- **Current MVP scope status:** simulator-validated baseline + backend launch-readiness checklist complete.
+- **Phase 1 launch-prep completed:** simulator evidence + release rehearsal + tracking sync.
+- **Remaining production gates:** P0.1 and P1.6 real-device execution only.
+- **Readiness label:** simulator-ready for internal demo/pilot (not final public-production sign-off).
 
 ## How to Use
 - Execute from top to bottom by priority.
@@ -30,8 +31,8 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - `2026-05-03`: Milestone 1 complete — matrix and runbook hardened with explicit scoring, failure taxonomy, and unknown tracker.
 - `2026-05-03`: Milestone 2 started — batch validation ledger added for quality evidence capture.
 - `2026-05-03`: Milestone 3 prep complete — closure protocol documented for current simulator-first MVP validation.
-- `2026-05-03`: Added simulator pre-validation template (`docs/evidence/iterations/simulator-prevalidation.md`) to keep progress moving while iPhone access is unavailable.
-- `2026-05-04`: iOS toolchain + simulator runtime setup completed; project build is green in simulator environment as pre-validation support.
+- `2026-05-04`: Handoff pack finalized (execution order, matrix fill rules, copy-paste batch template, objective closure gates).
+- `2026-05-04`: Physical execution still pending first Quiet batch.
 
 ### 2) Backend Migration Reproducibility Check
 - [x] Verify baseline migration applies from clean DB using committed migration files. (`2026-05-03`)
@@ -65,23 +66,11 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - [x] Standardize error responses for operational debugging. (`2026-05-03`)
 - **Done when:** API behavior under malformed/high-volume requests is controlled and predictable.
 
-#### P1.4 Completion Notes (Date-Stamped)
-- `2026-05-03`: Added route-level body limits and transcript payload guards (`fullText`, `segments`, `segment.text`).
-- `2026-05-03`: Added `@fastify/rate-limit` with route policies for auth and write endpoints.
-- `2026-05-03`: Added standardized error envelope `{ message, code, requestId, details? }` and normalization for framework-level validation/body-size errors.
-- `2026-05-03`: Added integration resilience tests and verified `npm test` + `npm run build` pass.
-
 ### 5) Observability Baseline
 - [x] Add structured server logs with request correlation IDs. (`2026-05-03`)
 - [x] Define minimal incident triage fields (route, status, user scope, timestamp). (`2026-05-03`)
 - [x] Add error monitoring plan (tool choice + integration steps documented). (`2026-05-03`)
 - **Done when:** failures can be diagnosed quickly without guessing.
-
-#### P1.5 Completion Notes (Date-Stamped)
-- `2026-05-03`: Added observability plugin with `x-correlation-id` propagation and structured `api_request_completed`/`api_request_failed` logs.
-- `2026-05-03`: Added minimum incident triage fields in logs (`route`, `statusCode`, `userScope`, `timestamp`, `requestId`, `correlationId`).
-- `2026-05-03`: Added monitoring plan with tool choice and rollout steps in `apps/teman-tuli-api/docs/observability-baseline.md`.
-- `2026-05-03`: Added integration coverage for correlation-id behavior and re-ran backend quality checks.
 
 ### 6) iOS Runtime Reliability Sweep
 - [ ] Validate interruption handling for call/background/foreground on physical device.
@@ -92,6 +81,7 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 #### P1.6 Validation Notes
 - `2026-05-03`: Simulator-first evidence path added as current MVP baseline (`docs/evidence/iterations/simulator-prevalidation.md`).
 - `2026-05-04`: Local Xcode + iOS Simulator runtime prepared; simulator build currently passes (`BUILD SUCCEEDED`) for `TemanTuli`.
+- `2026-05-04`: Real-device interruption closure gates documented in `docs/evidence/iterations/execution-runbook.md` and `docs/evidence/iterations/p0.1-validation-log.md`.
 
 ---
 
@@ -103,37 +93,30 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - [x] Validate user-scoped authorization boundaries with negative tests. (`2026-05-03`)
 - **Done when:** privacy claims in docs match runtime behavior.
 
-#### P2.7 Completion Notes (Date-Stamped)
-- `2026-05-03`: Added explicit v1 retention policy (manual delete only) in backend README.
-- `2026-05-03`: Extended negative authorization tests for cross-user `PATCH`, `DELETE`, and `POST /feedback` access attempts.
-- `2026-05-03`: Re-validated backend quality gates (`npm test`, `npm run build`).
-
 ### 8) CI Baseline (Quality Gate)
 - [x] Add CI workflow to run backend `npm test` + `npm run build` on pull requests. (`2026-05-03`)
 - [x] Add status badge and failure troubleshooting notes. (`2026-05-03`)
 - **Done when:** regressions are automatically blocked before merge.
 
-#### P2.8 Completion Notes (Date-Stamped)
-- `2026-05-03`: Added GitHub Actions workflow `.github/workflows/backend-ci.yml` for PR quality gate.
-- `2026-05-03`: Added backend CI badge and troubleshooting section in `apps/teman-tuli-api/README.md`.
-
 ### 9) Release Runbook
 - [x] Create release checklist (pre-flight, migration, smoke test, rollback triggers). (`2026-05-03`)
 - [x] Define rollback steps for DB migration and API release. (`2026-05-03`)
 - [x] Add post-release verification checklist. (`2026-05-03`)
+- [x] Record rehearsal evidence with pass/fail outcomes. (`2026-05-04`)
 - **Done when:** release can be repeated by another engineer without tribal knowledge.
 
 #### P2.9 Completion Notes (Date-Stamped)
 - `2026-05-03`: Added operational release runbook in `docs/release-runbook.md`.
-- `2026-05-03`: Included pre-flight, migration sequence, smoke checks, rollback triggers, DB+API rollback, and post-release verification.
+- `2026-05-04`: Rehearsal evidence captured in `docs/evidence/iterations/release-rehearsal-2026-05-04.md` with command parity notes.
 
 ---
 
-## Immediate Next Sprint (Recommended Execution Order)
-1. Complete simulator evidence entries in `docs/evidence/iterations/simulator-prevalidation.md` for all mandatory MVP flows.
-2. Run one release rehearsal using `docs/release-runbook.md` and capture findings.
-3. Execute one physical iPhone runtime sweep for P1.6 interruption and recovery behavior.
-4. Execute 9-session real-device validation matrix for P0.1 and close unknown tracker.
+## Next Action When iPhone Is Available (Time-Boxed)
+1. **0-10 min:** run pre-setup checklist in `docs/evidence/iterations/execution-runbook.md`.
+2. **10-35 min:** execute Quiet batch (3 sessions), update matrix + batch log.
+3. **35-60 min:** execute Moderate batch (3 sessions), update matrix + batch log.
+4. **60-85 min:** execute Noisy batch (3 sessions), update matrix + batch log.
+5. **85-100 min:** run closure checks for P0.1 and P1.6 and update this TODO status.
 
 ---
 
@@ -141,4 +124,4 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - Keep API contract under `/api/v1` unless change is strictly necessary.
 - Prioritize reliability over new features.
 - Keep transcript privacy defaults unchanged.
-- Treat simulator validation as baseline evidence; treat real-device validation as expansion required before public production.
+- Simulator validation is baseline evidence; real-device evidence is the final production gate.
