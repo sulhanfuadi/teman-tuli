@@ -8,6 +8,7 @@ final class LiveCaptionViewModel: ObservableObject {
     @Published var saveMessage: String?
     @Published var errorMessage: String?
     @Published var isSaving: Bool = false
+    @Published var captionFontSize: Double = 34
 
     let speechService: SpeechCaptionService
     private let apiClient: APIClient
@@ -27,7 +28,7 @@ final class LiveCaptionViewModel: ObservableObject {
         speechService.stop()
     }
 
-    func saveTranscript(token: String) async {
+    func saveTranscript(token: String, session: AppSession) async {
         guard !speechService.liveText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             errorMessage = "Belum ada transkrip untuk disimpan."
             return
@@ -48,14 +49,34 @@ final class LiveCaptionViewModel: ObservableObject {
             notes: notes.isEmpty ? nil : notes,
             startedAt: startedAt,
             endedAt: endedAt,
-            segments: speechService.segments.isEmpty ? [TranscriptSegment(id: nil, text: speechService.liveText, startMs: 0, endMs: nil)] : speechService.segments
+            segments: speechService.segments.isEmpty
+                ? [TranscriptSegment(id: nil, text: speechService.liveText, startMs: 0, endMs: nil)]
+                : speechService.segments
         )
 
         do {
             _ = try await apiClient.createSession(token: token, payload: payload)
             saveMessage = "Transkrip disimpan secara privat."
+        } catch let error as APIError {
+            if error == .unauthorized {
+                session.expireAuth()
+                errorMessage = nil
+                return
+            }
+            errorMessage = mapError(error)
         } catch {
             errorMessage = "Gagal menyimpan transkrip. Coba lagi setelah koneksi stabil."
+        }
+    }
+
+    private func mapError(_ error: APIError) -> String {
+        switch error {
+        case .networkUnavailable:
+            return "Koneksi ke server gagal. Pastikan backend aktif dan internet stabil."
+        case .serverError(let code):
+            return "Penyimpanan gagal (server \(code))."
+        default:
+            return "Gagal menyimpan transkrip."
         }
     }
 }

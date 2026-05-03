@@ -18,7 +18,7 @@ final class SessionDetailViewModel: ObservableObject {
         self.sessionId = sessionId
     }
 
-    func load(token: String) async {
+    func load(token: String, appSession: AppSession) async {
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
@@ -26,12 +26,18 @@ final class SessionDetailViewModel: ObservableObject {
         do {
             session = try await apiClient.fetchSession(token: token, id: sessionId)
             notes = session?.notes ?? ""
+        } catch let error as APIError {
+            if error == .unauthorized {
+                appSession.expireAuth()
+                return
+            }
+            errorMessage = mapError(error)
         } catch {
             errorMessage = "Gagal memuat detail transkrip."
         }
     }
 
-    func saveNotes(token: String) async {
+    func saveNotes(token: String, appSession: AppSession) async {
         guard let session else { return }
         do {
             self.session = try await apiClient.updateSession(
@@ -42,19 +48,47 @@ final class SessionDetailViewModel: ObservableObject {
                 notes: notes.isEmpty ? nil : notes
             )
             message = "Catatan diperbarui."
+        } catch let error as APIError {
+            if error == .unauthorized {
+                appSession.expireAuth()
+                return
+            }
+            errorMessage = mapError(error)
         } catch {
             errorMessage = "Gagal memperbarui catatan."
         }
     }
 
-    func submitFeedback(token: String) async {
+    func submitFeedback(token: String, appSession: AppSession) async {
         guard let session else { return }
         do {
-            try await apiClient.submitFeedback(token: token, sessionId: session.id, rating: selectedRating, comment: feedbackComment.isEmpty ? nil : feedbackComment)
+            try await apiClient.submitFeedback(
+                token: token,
+                sessionId: session.id,
+                rating: selectedRating,
+                comment: feedbackComment.isEmpty ? nil : feedbackComment
+            )
             message = "Feedback caption tersimpan."
             feedbackComment = ""
+        } catch let error as APIError {
+            if error == .unauthorized {
+                appSession.expireAuth()
+                return
+            }
+            errorMessage = mapError(error)
         } catch {
             errorMessage = "Gagal mengirim feedback."
+        }
+    }
+
+    private func mapError(_ error: APIError) -> String {
+        switch error {
+        case .networkUnavailable:
+            return "Koneksi gagal. Cek jaringan dan backend."
+        case .serverError(let code):
+            return "Server gagal memproses (\(code))."
+        default:
+            return "Terjadi kesalahan saat memproses transkrip."
         }
     }
 }

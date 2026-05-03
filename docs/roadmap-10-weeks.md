@@ -22,5 +22,5 @@
 
 ## Week 10: Submission Packaging
 - Finalize two case studies
-- Record 3-minute demo video
+- Finalize device test evidence and iteration notes
 - Update CV and project links for submission

@@ -8,6 +8,7 @@ final class AppSession: ObservableObject {
         didSet { storedToken = token ?? "" }
     }
     @Published var user: AuthUser?
+    @Published var authNotice: String?
 
     init() {
         token = storedToken.isEmpty ? nil : storedToken
@@ -18,5 +19,14 @@ final class AppSession: ObservableObject {
     func signOut() {
         token = nil
         user = nil
+    }
+
+    func expireAuth(message: String = "Sesi berakhir. Silakan login kembali.") {
+        signOut()
+        authNotice = message
+    }
+
+    func clearNotice() {
+        authNotice = nil
     }
 }

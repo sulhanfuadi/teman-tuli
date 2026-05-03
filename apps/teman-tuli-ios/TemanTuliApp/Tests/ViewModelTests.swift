@@ -3,12 +3,20 @@ import XCTest
 
 final class MockAPIClient: APIClient {
     var sessions: [TranscriptSession] = []
+    var shouldThrowUnauthorized: Bool = false
 
     func register(name: String, email: String, password: String, goal: String?) async throws -> (AuthUser, String) {
         (AuthUser(id: "u1", name: name, email: email, goal: goal), "token")
     }
 
-    func fetchSessions(token: String) async throws -> [TranscriptSession] { sessions }
+    func login(email: String, password: String) async throws -> (AuthUser, String) {
+        (AuthUser(id: "u1", name: "User", email: email, goal: nil), "token")
+    }
+
+    func fetchSessions(token: String) async throws -> [TranscriptSession] {
+        if shouldThrowUnauthorized { throw APIError.unauthorized }
+        return sessions
+    }
 
     func createSession(token: String, payload: NewTranscriptSession) async throws -> TranscriptSession {
         let session = TranscriptSession(
@@ -29,10 +37,12 @@ final class MockAPIClient: APIClient {
     }
 
     func fetchSession(token: String, id: String) async throws -> TranscriptSession {
-        sessions.first { $0.id == id }!
+        if shouldThrowUnauthorized { throw APIError.unauthorized }
+        return sessions.first { $0.id == id }!
     }
 
     func updateSession(token: String, id: String, title: String?, className: String?, notes: String?) async throws -> TranscriptSession {
+        if shouldThrowUnauthorized { throw APIError.unauthorized }
         let index = sessions.firstIndex { $0.id == id }!
         sessions[index].notes = notes
         return sessions[index]
@@ -40,7 +50,9 @@ final class MockAPIClient: APIClient {
 
     func deleteSession(token: String, id: String) async throws {}
 
-    func submitFeedback(token: String, sessionId: String, rating: CaptionFeedbackRating, comment: String?) async throws {}
+    func submitFeedback(token: String, sessionId: String, rating: CaptionFeedbackRating, comment: String?) async throws {
+        if shouldThrowUnauthorized { throw APIError.unauthorized }
+    }
 }
 
 @MainActor
@@ -61,7 +73,8 @@ final class ViewModelTests: XCTestCase {
             segments: []
         )]
         let vm = SessionsViewModel(apiClient: api)
-        await vm.load(token: "token")
+        let appSession = AppSession()
+        await vm.load(token: "token", session: appSession)
         XCTAssertEqual(vm.sessions.count, 1)
         XCTAssertEqual(vm.sessions.first?.title, "Kuliah Aksesibilitas")
     }
@@ -82,9 +95,23 @@ final class ViewModelTests: XCTestCase {
             segments: []
         )]
         let vm = SessionDetailViewModel(apiClient: api, sessionId: "s1")
-        await vm.load(token: "token")
+        let appSession = AppSession()
+        await vm.load(token: "token", appSession: appSession)
         vm.notes = "Bagian ini penting."
-        await vm.saveNotes(token: "token")
+        await vm.saveNotes(token: "token", appSession: appSession)
         XCTAssertEqual(vm.session?.notes, "Bagian ini penting.")
+    }
+
+    func testUnauthorizedSessionLoadExpiresAuth() async {
+        let api = MockAPIClient()
+        api.shouldThrowUnauthorized = true
+        let vm = SessionsViewModel(apiClient: api)
+        let appSession = AppSession()
+        appSession.token = "active-token"
+
+        await vm.load(token: "active-token", session: appSession)
+
+        XCTAssertNil(appSession.token)
+        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
     }
 }

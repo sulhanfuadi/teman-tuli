@@ -27,7 +27,7 @@ struct SessionDetailView: View {
                     TextField("Tambahkan konteks penting dari kelas", text: $viewModel.notes, axis: .vertical)
                     Button("Simpan Catatan") {
                         guard let token = session.token else { return }
-                        Task { await viewModel.saveNotes(token: token) }
+                        Task { await viewModel.saveNotes(token: token, appSession: session) }
                     }
                 }
 
@@ -40,7 +40,7 @@ struct SessionDetailView: View {
                     TextField("Apa yang perlu diperbaiki?", text: $viewModel.feedbackComment, axis: .vertical)
                     Button("Kirim Feedback") {
                         guard let token = session.token else { return }
-                        Task { await viewModel.submitFeedback(token: token) }
+                        Task { await viewModel.submitFeedback(token: token, appSession: session) }
                     }
                 }
             } else if viewModel.isLoading {
@@ -56,7 +56,7 @@ struct SessionDetailView: View {
         .navigationTitle("Detail Transkrip")
         .task {
             guard let token = session.token else { return }
-            await viewModel.load(token: token)
+            await viewModel.load(token: token, appSession: session)
         }
     }
 }

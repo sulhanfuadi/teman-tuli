@@ -2,6 +2,7 @@ import Foundation
 
 protocol APIClient {
     func register(name: String, email: String, password: String, goal: String?) async throws -> (AuthUser, String)
+    func login(email: String, password: String) async throws -> (AuthUser, String)
     func fetchSessions(token: String) async throws -> [TranscriptSession]
     func createSession(token: String, payload: NewTranscriptSession) async throws -> TranscriptSession
     func fetchSession(token: String, id: String) async throws -> TranscriptSession
@@ -10,9 +11,11 @@ protocol APIClient {
     func submitFeedback(token: String, sessionId: String, rating: CaptionFeedbackRating, comment: String?) async throws
 }
 
-enum APIError: Error {
+enum APIError: Error, Equatable {
     case invalidURL
-    case serverError
+    case unauthorized
+    case networkUnavailable
+    case serverError(statusCode: Int)
     case decodingError
 }
 
@@ -33,6 +36,13 @@ final class LiveAPIClient: APIClient {
         struct Payload: Codable { let name: String; let email: String; let password: String; let goal: String? }
         struct Response: Codable { let user: AuthUser; let token: String }
         let response: Response = try await request(path: "auth/register", method: "POST", body: Payload(name: name, email: email, password: password, goal: goal), token: nil)
+        return (response.user, response.token)
+    }
+
+    func login(email: String, password: String) async throws -> (AuthUser, String) {
+        struct Payload: Codable { let email: String; let password: String }
+        struct Response: Codable { let user: AuthUser; let token: String }
+        let response: Response = try await request(path: "auth/login", method: "POST", body: Payload(email: email, password: password), token: nil)
         return (response.user, response.token)
     }
 
@@ -71,13 +81,34 @@ final class LiveAPIClient: APIClient {
         if let token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
         if let body { request.httpBody = try encoder.encode(body) }
 
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-            throw APIError.serverError
+        let data: Data
+        let response: URLResponse
+
+        do {
+            (data, response) = try await URLSession.shared.data(for: request)
+        } catch {
+            throw APIError.networkUnavailable
+        }
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.serverError(statusCode: -1)
+        }
+
+        switch httpResponse.statusCode {
+        case 200...299:
+            break
+        case 401:
+            throw APIError.unauthorized
+        default:
+            throw APIError.serverError(statusCode: httpResponse.statusCode)
         }
 
         if T.self == EmptyResponse.self { return EmptyResponse() as! T }
-        do { return try decoder.decode(T.self, from: data) } catch { throw APIError.decodingError }
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw APIError.decodingError
+        }
     }
 }
 

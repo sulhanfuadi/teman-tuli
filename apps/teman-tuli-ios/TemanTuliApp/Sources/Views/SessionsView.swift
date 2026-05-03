@@ -16,7 +16,11 @@ struct SessionsView: View {
                 if viewModel.isLoading {
                     ProgressView("Memuat transkrip...")
                 } else if viewModel.sessions.isEmpty {
-                    ContentUnavailableView("Belum ada transkrip", systemImage: "captions.bubble", description: Text("Simpan transkrip dari Live Caption untuk melihat arsip privat di sini."))
+                    ContentUnavailableView(
+                        "Belum ada transkrip",
+                        systemImage: "captions.bubble",
+                        description: Text("Simpan transkrip dari Live Caption untuk melihat arsip privat di sini.")
+                    )
                 } else {
                     List(viewModel.sessions) { item in
                         NavigationLink(destination: SessionDetailView(apiClient: apiClient, sessionId: item.id)) {
@@ -38,12 +42,23 @@ struct SessionsView: View {
             .toolbar {
                 Button("Refresh") {
                     guard let token = session.token else { return }
-                    Task { await viewModel.load(token: token) }
+                    Task { await viewModel.load(token: token, session: session) }
                 }
             }
             .task {
                 guard let token = session.token else { return }
-                await viewModel.load(token: token)
+                await viewModel.load(token: token, session: session)
+            }
+            .overlay(alignment: .bottom) {
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.white)
+                        .padding(10)
+                        .background(Color.red)
+                        .clipShape(Capsule())
+                        .padding(.bottom, 8)
+                }
             }
         }
     }

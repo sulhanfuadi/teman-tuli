@@ -22,14 +22,26 @@ struct LiveCaptionView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Live Caption")
                             .font(.headline)
+
                         Text(viewModel.speechService.liveText.isEmpty ? "Tekan Mulai Caption untuk menampilkan transkrip kelas di sini." : viewModel.speechService.liveText)
-                            .font(.system(size: 30, weight: .semibold, design: .rounded))
-                            .lineSpacing(8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.system(size: viewModel.captionFontSize, weight: .semibold, design: .rounded))
+                            .lineSpacing(10)
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity, minHeight: 220, alignment: .topLeading)
                             .padding()
-                            .background(.thinMaterial)
+                            .background(Color.black)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                             .accessibilityLabel("Teks caption langsung")
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Ukuran Caption")
+                            Spacer()
+                            Text("\(Int(viewModel.captionFontSize))")
+                                .foregroundStyle(.secondary)
+                        }
+                        Slider(value: $viewModel.captionFontSize, in: 28...44, step: 1)
                     }
 
                     TextField("Catatan pribadi setelah kelas (opsional)", text: $viewModel.notes, axis: .vertical)
@@ -46,7 +58,7 @@ struct LiveCaptionView: View {
 
                         Button(viewModel.isSaving ? "Menyimpan..." : "Simpan Privat") {
                             guard let token = session.token else { return }
-                            Task { await viewModel.saveTranscript(token: token) }
+                            Task { await viewModel.saveTranscript(token: token, session: session) }
                         }
                         .disabled(viewModel.isSaving || viewModel.speechService.isRecording)
                     }
@@ -57,8 +69,11 @@ struct LiveCaptionView: View {
                     if let message = viewModel.saveMessage {
                         Text(message).foregroundStyle(.green)
                     }
-                    if let message = viewModel.speechService.permissionMessage ?? viewModel.errorMessage {
-                        Text(message).foregroundStyle(.red)
+
+                    if let message = viewModel.speechService.permissionMessage {
+                        fallbackCard(message: message)
+                    } else if let message = viewModel.errorMessage {
+                        fallbackCard(message: message)
                     }
                 }
                 .padding()
@@ -68,12 +83,26 @@ struct LiveCaptionView: View {
     }
 
     private var privacyCard: some View {
-        Label("Transkrip tidak diunggah otomatis. Kamu hanya menyimpan ke backend setelah menekan Simpan Privat.", systemImage: "lock.shield")
+        Label("Transkrip tidak diunggah otomatis. Data hanya dikirim saat kamu menekan Simpan Privat.", systemImage: "lock.shield")
             .font(.callout)
             .foregroundStyle(.secondary)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.blue.opacity(0.08))
             .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func fallbackCard(message: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(message, systemImage: "exclamationmark.triangle")
+                .foregroundStyle(.red)
+            Text("Recovery action: cek permission, koneksi backend, lalu coba Start/Save lagi.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.red.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
