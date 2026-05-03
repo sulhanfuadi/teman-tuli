@@ -1,5 +1,7 @@
 # Teman Tuli Backend (`apps/teman-tuli-api`)
 
+[![Backend CI](https://github.com/sulhanfuadi/teman-tuli/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/sulhanfuadi/teman-tuli/actions/workflows/backend-ci.yml)
+
 Backend API for **Teman Tuli**, an accessibility-first application project for Mahasiswa Tuli.
 
 ## Problem
@@ -157,3 +159,22 @@ npm test
 - Share-by-class-code with explicit consent.
 - Lecturer summary export.
 - Human correction workflow for important transcripts.
+
+## CI Troubleshooting (Priority 2.8)
+- Check workflow logs in GitHub Actions for the failed step (`npm ci`, `npm test`, or `npm run build`).
+- If dependency install fails, verify lockfile consistency by running:
+  ```bash
+  cd apps/teman-tuli-api
+  npm ci
+  ```
+- If tests fail in CI but pass locally, re-run exact CI commands locally:
+  ```bash
+  cd apps/teman-tuli-api
+  npm test
+  npm run build
+  ```
+- If lockfile drift is detected, refresh dependency graph intentionally and commit updated `package-lock.json`:
+  ```bash
+  cd apps/teman-tuli-api
+  npm install
+  ```

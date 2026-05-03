@@ -1,0 +1,36 @@
+name: Backend CI
+
+on:
+  pull_request:
+    paths:
+      - 'apps/teman-tuli-api/**'
+      - '.github/workflows/backend-ci.yml'
+
+jobs:
+  backend-quality-gate:
+    name: Backend Test + Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apps/teman-tuli-api
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/teman-tuli-api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build TypeScript
+        run: npm run build
