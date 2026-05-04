@@ -75,7 +75,7 @@ final class ViewModelTests: XCTestCase {
         await vm.load(token: "token", session: appSession)
 
         XCTAssertEqual(vm.sessions.count, 1)
-        XCTAssertEqual(vm.sessions.first?.title, "Kuliah Aksesibilitas")
+        XCTAssertEqual(vm.sessions.first?.title, "Accessibility Lecture")
     }
 
     func testSessionDetailUpdatesNotes() async {
@@ -85,10 +85,10 @@ final class ViewModelTests: XCTestCase {
         let appSession = AppSession()
 
         await vm.load(token: "token", appSession: appSession)
-        vm.notes = "Bagian ini penting."
+        vm.notes = "This section is important."
         await vm.saveNotes(token: "token", appSession: appSession)
 
-        XCTAssertEqual(vm.session?.notes, "Bagian ini penting.")
+        XCTAssertEqual(vm.session?.notes, "This section is important.")
     }
 
     func testUnauthorizedSessionLoadExpiresAuth() async {
@@ -101,14 +101,27 @@ final class ViewModelTests: XCTestCase {
         await vm.load(token: "active-token", session: appSession)
 
         XCTAssertNil(appSession.token)
-        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
+        XCTAssertEqual(appSession.authNotice, "Your session has expired. Please sign in again.")
+    }
+
+    func testSaveTranscriptUsesEnglishLanguageCode() async {
+        let api = MockAPIClient()
+        let speechService = SpeechCaptionService()
+        speechService.liveText = "Important transcript"
+        let vm = LiveCaptionViewModel(apiClient: api, speechService: speechService)
+        let appSession = AppSession()
+        appSession.token = "active-token"
+
+        await vm.saveTranscript(token: "active-token", session: appSession)
+
+        XCTAssertEqual(api.sessions.last?.languageCode, "en-US")
     }
 
     func testUnauthorizedSaveTranscriptExpiresAuth() async {
         let api = MockAPIClient()
         api.unauthorizedOnCreateSession = true
         let speechService = SpeechCaptionService()
-        speechService.liveText = "Ini transkrip penting"
+        speechService.liveText = "Important transcript"
         let vm = LiveCaptionViewModel(apiClient: api, speechService: speechService)
         let appSession = AppSession()
         appSession.token = "active-token"
@@ -116,7 +129,7 @@ final class ViewModelTests: XCTestCase {
         await vm.saveTranscript(token: "active-token", session: appSession)
 
         XCTAssertNil(appSession.token)
-        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
+        XCTAssertEqual(appSession.authNotice, "Your session has expired. Please sign in again.")
     }
 
     func testUnauthorizedSessionDetailLoadExpiresAuth() async {
@@ -130,7 +143,7 @@ final class ViewModelTests: XCTestCase {
         await vm.load(token: "active-token", appSession: appSession)
 
         XCTAssertNil(appSession.token)
-        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
+        XCTAssertEqual(appSession.authNotice, "Your session has expired. Please sign in again.")
     }
 
     func testUnauthorizedSaveNotesExpiresAuth() async {
@@ -142,11 +155,11 @@ final class ViewModelTests: XCTestCase {
         appSession.token = "active-token"
 
         await vm.load(token: "active-token", appSession: appSession)
-        vm.notes = "Catatan baru"
+        vm.notes = "Updated notes"
         await vm.saveNotes(token: "active-token", appSession: appSession)
 
         XCTAssertNil(appSession.token)
-        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
+        XCTAssertEqual(appSession.authNotice, "Your session has expired. Please sign in again.")
     }
 
     func testUnauthorizedFeedbackExpiresAuth() async {
@@ -161,7 +174,7 @@ final class ViewModelTests: XCTestCase {
         await vm.submitFeedback(token: "active-token", appSession: appSession)
 
         XCTAssertNil(appSession.token)
-        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
+        XCTAssertEqual(appSession.authNotice, "Your session has expired. Please sign in again.")
     }
 
     func testDeleteSessionRemovesItemFromLocalState() async {
@@ -176,7 +189,7 @@ final class ViewModelTests: XCTestCase {
 
         XCTAssertEqual(vm.sessions.count, 1)
         XCTAssertEqual(vm.sessions.first?.id, "s2")
-        XCTAssertEqual(vm.successMessage, "Transkrip berhasil dihapus.")
+        XCTAssertEqual(vm.successMessage, "Transcript deleted successfully.")
     }
 
     func testUnauthorizedDeleteSessionExpiresAuth() async {
@@ -191,7 +204,7 @@ final class ViewModelTests: XCTestCase {
         await vm.deleteSession(id: "s1", token: "active-token", session: appSession)
 
         XCTAssertNil(appSession.token)
-        XCTAssertEqual(appSession.authNotice, "Sesi berakhir. Silakan login kembali.")
+        XCTAssertEqual(appSession.authNotice, "Your session has expired. Please sign in again.")
     }
 
     func testEndpointConfigSavesValidURL() {
@@ -229,24 +242,24 @@ final class ViewModelTests: XCTestCase {
             fallbackMessage: "fallback"
         )
 
-        XCTAssertTrue(message.contains("Terlalu banyak permintaan"))
+        XCTAssertTrue(message.contains("Too many requests"))
         let presentation = APIErrorMessageFormatter.presentation(
             for: error,
             networkMessage: "network",
             fallbackMessage: "fallback"
         )
 
-        XCTAssertTrue(presentation.message.contains("Terlalu banyak permintaan"))
+        XCTAssertTrue(presentation.message.contains("Too many requests"))
         XCTAssertEqual(presentation.requestReference, "req-1234")
     }
 
     private func sampleSession(id: String) -> TranscriptSession {
         TranscriptSession(
             id: id,
-            title: "Kuliah Aksesibilitas",
+            title: "Accessibility Lecture",
             className: "Design",
-            languageCode: "id-ID",
-            fullText: "Halo semua.",
+            languageCode: "en-US",
+            fullText: "Hello everyone.",
             notes: nil,
             startedAt: Date(),
             endedAt: Date(),

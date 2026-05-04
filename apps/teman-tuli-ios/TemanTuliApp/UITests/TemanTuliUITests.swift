@@ -12,7 +12,7 @@ final class TemanTuliUITests: XCTestCase {
         let app = launchApp(
             config: TemanTuliUITestLaunchConfig(
                 authenticated: true,
-                transcript: "Ini transkrip dari harness simulator"
+                transcript: "This transcript comes from simulator harness"
             )
         )
 
@@ -23,36 +23,36 @@ final class TemanTuliUITests: XCTestCase {
         saveButton.tap()
         XCTAssertTrue(app.staticTexts["save_success_message"].waitForExistence(timeout: 2))
 
-        app.tabBars.buttons["Transkrip"].tap()
+        app.tabBars.buttons["Transcripts"].tap()
 
         let firstCell = app.cells.firstMatch
         XCTAssertTrue(firstCell.waitForExistence(timeout: 5))
         firstCell.tap()
 
-        XCTAssertTrue(app.navigationBars["Detail Transkrip"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["Transcript Detail"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["detail_transcript_text"].exists)
 
-        app.navigationBars["Detail Transkrip"].buttons.firstMatch.tap()
+        app.navigationBars["Transcript Detail"].buttons.firstMatch.tap()
 
         let cellToDelete = app.cells.firstMatch
         XCTAssertTrue(cellToDelete.waitForExistence(timeout: 5))
         cellToDelete.swipeLeft()
 
-        let deleteButtons = app.buttons.matching(identifier: "Hapus")
+        let deleteButtons = app.buttons.matching(identifier: "Delete")
         XCTAssertTrue(deleteButtons.firstMatch.waitForExistence(timeout: 2))
         deleteButtons.firstMatch.tap()
         if deleteButtons.firstMatch.waitForExistence(timeout: 1) {
             deleteButtons.firstMatch.tap()
         }
 
-        XCTAssertTrue(app.staticTexts["Belum ada transkrip"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["No transcripts yet"].waitForExistence(timeout: 5))
     }
 
     func testInterruptionSimulationShowsFallbackMessage() {
         let app = launchApp(
             config: TemanTuliUITestLaunchConfig(
                 authenticated: true,
-                transcript: "Transkrip interruption",
+                transcript: "Interruption transcript",
                 interruption: .audio
             )
         )
@@ -61,6 +61,6 @@ final class TemanTuliUITests: XCTestCase {
         XCTAssertTrue(startButton.waitForExistence(timeout: 5))
         startButton.tap()
 
-        XCTAssertTrue(app.staticTexts["Recovery action: cek permission, koneksi backend, lalu coba Start/Save lagi."].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Recovery action: check permissions, backend connectivity, then try Start/Save again."].waitForExistence(timeout: 5))
     }
 }

@@ -7,7 +7,7 @@ enum UITestInterruption: String {
 
 struct TemanTuliUITestLaunchConfig {
     var authenticated: Bool = true
-    var transcript: String = "Transkrip uji simulator"
+    var transcript: String = "Simulator test transcript"
     var interruption: UITestInterruption?
     var mockAPIBaseURL: String?
 
