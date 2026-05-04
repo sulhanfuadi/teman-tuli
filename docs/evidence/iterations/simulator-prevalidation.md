@@ -96,3 +96,15 @@ When iPhone is available, execute in this order:
 #### Findings
 - English migration is stable for simulator-first workflow validation.
 - Speech recognition availability can still vary on simulator; harness mode remains the deterministic fallback for evidence capture.
+
+### Run `2026-05-04 11:45 WIB` (Apple-Style UIX Refresh Validation)
+- Build target / commit hash range: `1ca6f84` -> `f39a426`
+- Scope validated:
+  - Adaptive Light/Dark design tokens + reusable UI primitives
+  - Premium app icon set and in-app brand wordmark placement
+  - Full screen redesign across onboarding/live/transcripts/detail/settings
+  - Existing core interactions and simulator test flows remain functional
+
+#### Findings
+- UI hierarchy, spacing rhythm, and component consistency are significantly improved.
+- Accessibility-oriented readability remains strong while elevating overall visual quality.

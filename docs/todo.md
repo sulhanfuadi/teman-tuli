@@ -75,6 +75,7 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - **Done when:** iOS app has stable API integration UX for simulator-first validation.
 
 #### P1.6 Completion Notes (Date-Stamped)
+- `2026-05-04`: Apple-style UIX refresh completed with adaptive design system, premium app icon, and in-app brand wordmark.
 - `2026-05-04`: Full English iOS migration completed (Localizable.strings, English UI/error copy, speech locale en-US, transcript languageCode=en-US).
 - `2026-05-04`: Added runtime endpoint config in Settings (`APIEndpointConfig` + `LiveAPIClient` base URL provider).
 - `2026-05-04`: Added transcript delete flow in archive list with confirmation and feedback messaging.
