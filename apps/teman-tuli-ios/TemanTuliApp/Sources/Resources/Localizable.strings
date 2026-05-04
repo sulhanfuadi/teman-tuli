@@ -15,23 +15,25 @@
 "tab.transcripts" = "Transcripts";
 "tab.settings" = "Settings";
 
+"onboarding.hero_subtitle" = "Inclusive classroom access, designed with care.";
 "onboarding.account_access" = "Account Access";
 "onboarding.register.title" = "Create your Teman Tuli account";
 "onboarding.login.title" = "Sign in to Teman Tuli";
 "onboarding.name" = "Name";
 "onboarding.goal" = "Accessibility goal";
+"onboarding.default_goal" = "Access class captions with confidence";
 "onboarding.processing" = "Processing...";
 "onboarding.auth_failed" = "Authentication failed. Please try again.";
 "onboarding.invalid_credentials" = "Incorrect email or password.";
-"onboarding.network_error" = "Unable to reach the server. Check internet/backend connection.";
-"onboarding.auth_error" = "An authentication error occurred.";
+"onboarding.network_error" = "Unable to reach the server. Check your network or backend.";
+"onboarding.auth_error" = "Something went wrong during sign-in.";
 "onboarding.mode.register" = "Register";
 "onboarding.mode.login" = "Login";
 
 "live.session_title" = "Session title";
 "live.class_name_optional" = "Class name (optional)";
 "live.title" = "Live Caption";
-"live.placeholder" = "Press Start Caption to show classroom transcript here.";
+"live.placeholder" = "Press Start Caption to show live classroom transcript here.";
 "live.accessibility.live_text" = "Live caption text";
 "live.caption_size" = "Caption Size";
 "live.personal_notes_optional" = "Private notes after class (optional)";
@@ -40,8 +42,14 @@
 "live.stop" = "Stop";
 "live.saving" = "Saving...";
 "live.save_private" = "Save Privately";
-"live.privacy_note" = "Transcripts are not uploaded automatically. Data is only sent when you tap Save Privately.";
+"live.privacy_note" = "Transcripts are never uploaded automatically. Data is only sent when you choose Save Privately.";
 "live.recovery_action" = "Recovery action: check permissions, backend connectivity, then try Start/Save again.";
+"live.default_title" = "Class Notes";
+"live.error.empty_transcript" = "No transcript is available to save yet.";
+"live.save_success" = "Transcript saved privately.";
+"live.save_failed" = "Couldn’t save transcript. Try again when the connection is stable.";
+"live.network_failed" = "Server connection failed. Ensure the backend is running and your network is stable.";
+"live.save_fallback" = "Failed to save transcript.";
 
 "sessions.loading" = "Loading transcripts...";
 "sessions.empty.title" = "No transcripts yet";
@@ -49,8 +57,15 @@
 "sessions.class_name_fallback" = "Unnamed class";
 "sessions.nav_title" = "Private Transcripts";
 "sessions.delete.confirm_title" = "Delete this transcript?";
-"sessions.delete.message" = "This action cannot be undone for \"%@\".";
+"sessions.delete.message" = "This action can’t be undone for \"%@\".";
 "sessions.delete.fallback_title" = "this transcript";
+"sessions.load_failed" = "Failed to load transcripts.";
+"sessions.delete_success" = "Transcript deleted successfully.";
+"sessions.delete_failed" = "Failed to delete transcript.";
+"sessions.load_network_failed" = "Unable to fetch transcripts. Check your network or backend.";
+"sessions.load_fallback" = "Failed to load transcripts.";
+"sessions.delete_network_failed" = "Unable to delete transcript. Check your network or backend.";
+"sessions.delete_fallback" = "Failed to delete transcript.";
 
 "detail.section.info" = "Information";
 "detail.label.title" = "Title";
@@ -67,11 +82,19 @@
 "detail.feedback.submit" = "Submit Feedback";
 "detail.feedback.submitting" = "Submitting...";
 "detail.loading" = "Loading details...";
-"detail.not_found" = "Transcript not found.";
+"detail.not_found" = "Transcript not found";
+"detail.not_found_support" = "Try refreshing from the transcript list and open it again.";
 "detail.nav_title" = "Transcript Detail";
+"detail.load_failed" = "Failed to load transcript details.";
+"detail.notes_updated" = "Notes updated.";
+"detail.notes_update_failed" = "Failed to update notes.";
+"detail.feedback_saved" = "Caption feedback saved.";
+"detail.feedback_failed" = "Failed to submit feedback.";
+"detail.network_failed" = "Connection failed. Check network and backend.";
+"detail.fallback_error" = "An error occurred while processing transcript data.";
 
 "settings.section.accessibility" = "Accessibility";
-"settings.accessibility.large_caption" = "Large, high-contrast captions for classroom use";
+"settings.accessibility.large_caption" = "Large, high-contrast caption surfaces";
 "settings.accessibility.language" = "Primary language: English (en-US)";
 "settings.accessibility.private_transcript" = "Private transcripts by default";
 "settings.section.api" = "API Server";
@@ -83,7 +106,7 @@
 "settings.section.account" = "Account";
 "settings.signout" = "Sign Out";
 "settings.nav_title" = "Settings";
-"onboarding.default_goal" = "Get more inclusive classroom caption access";
+
 "speech.permission_required" = "Enable microphone and speech recognition permissions to use live caption.";
 "speech.unavailable" = "English speech recognition is currently unavailable.";
 "speech.mic_start_failed" = "Failed to start microphone recording.";
@@ -91,7 +114,8 @@
 "speech.caption_stopped" = "Captioning stopped. Press Start Caption to continue.";
 "speech.audio_interruption" = "Recording stopped due to an audio interruption (for example, an incoming call).";
 "speech.background_interruption" = "Recording stopped when the app moved to background. Press Start Caption to continue.";
-"error.invalid_url" = "The server address is invalid. Check the API endpoint settings.";
+
+"error.invalid_url" = "The server address is invalid. Check API endpoint settings.";
 "error.decoding" = "The server response could not be processed. Please try again.";
 "error.unauthorized" = "Your session has expired. Please sign in again.";
 "error.rate_limited" = "Too many requests. Please try again shortly.";
@@ -101,26 +125,3 @@
 "error.conflict" = "A data conflict occurred. Refresh and try again.";
 "error.internal" = "The server is having issues. Please try again shortly.";
 "error.request_failed" = "Request failed: %@";
-
-"live.default_title" = "Class Notes";
-"live.error.empty_transcript" = "No transcript is available to save yet.";
-"live.save_success" = "Transcript saved privately.";
-"live.save_failed" = "Failed to save transcript. Try again after the connection stabilizes.";
-"live.network_failed" = "Server connection failed. Ensure the backend is running and network is stable.";
-"live.save_fallback" = "Failed to save transcript.";
-
-"sessions.load_failed" = "Failed to load transcript list.";
-"sessions.delete_success" = "Transcript deleted successfully.";
-"sessions.delete_failed" = "Failed to delete transcript.";
-"sessions.load_network_failed" = "Unable to fetch transcripts. Check network/backend connection.";
-"sessions.load_fallback" = "Failed to load transcript list.";
-"sessions.delete_network_failed" = "Unable to delete transcript. Check network/backend connection.";
-"sessions.delete_fallback" = "Failed to delete transcript.";
-
-"detail.load_failed" = "Failed to load transcript details.";
-"detail.notes_updated" = "Notes updated.";
-"detail.notes_update_failed" = "Failed to update notes.";
-"detail.feedback_saved" = "Caption feedback saved.";
-"detail.feedback_failed" = "Failed to submit feedback.";
-"detail.network_failed" = "Connection failed. Check network and backend.";
-"detail.fallback_error" = "An error occurred while processing transcript data.";
