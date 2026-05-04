@@ -21,9 +21,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Teman Tuli membutuhkan mikrofon untuk membuat live caption saat kelas.</string>
+	<string>Teman Tuli needs microphone access to provide live classroom captions.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Teman Tuli menggunakan speech recognition untuk mengubah suara menjadi teks caption.</string>
+	<string>Teman Tuli uses speech recognition to convert voice into live caption text.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 </dict>
