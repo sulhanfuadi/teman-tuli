@@ -11,7 +11,7 @@ final class SpeechCaptionService: ObservableObject {
     @Published var segments: [TranscriptSegment] = []
 
     private let runtimeConfig: UITestRuntimeConfig
-    private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "id-ID"))
+    private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
     private let audioEngine = AVAudioEngine()
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -49,7 +49,7 @@ final class SpeechCaptionService: ObservableObject {
         }
 
         if !speechAuthorized || !micAuthorized {
-            permissionMessage = "Aktifkan izin mikrofon dan speech recognition untuk memakai live caption."
+            permissionMessage = L10n.tr("speech.permission_required")
             return false
         }
         return true
@@ -70,9 +70,9 @@ final class SpeechCaptionService: ObservableObject {
             if let mockInterruption = runtimeConfig.mockInterruption {
                 switch mockInterruption {
                 case .background:
-                    permissionMessage = "Rekaman dihentikan saat aplikasi ke background. Tekan Mulai Caption untuk lanjut."
+                    permissionMessage = L10n.tr("speech.background_interruption")
                 case .audio:
-                    permissionMessage = "Rekaman berhenti karena interupsi audio (misalnya panggilan masuk)."
+                    permissionMessage = L10n.tr("speech.audio_interruption")
                 }
                 isRecording = false
             }
@@ -81,7 +81,7 @@ final class SpeechCaptionService: ObservableObject {
 
         guard await requestPermissions() else { return }
         guard recognizer?.isAvailable == true else {
-            permissionMessage = "Speech recognition Bahasa Indonesia sedang tidak tersedia."
+            permissionMessage = L10n.tr("speech.unavailable")
             return
         }
 
@@ -107,13 +107,13 @@ final class SpeechCaptionService: ObservableObject {
             try audioEngine.start()
             isRecording = true
         } catch {
-            permissionMessage = "Gagal memulai mikrofon."
+            permissionMessage = L10n.tr("speech.mic_start_failed")
             teardownAudioPipeline()
             return
         }
 
         guard let request else {
-            permissionMessage = "Gagal menyiapkan speech request."
+            permissionMessage = L10n.tr("speech.request_setup_failed")
             teardownAudioPipeline()
             return
         }
@@ -134,7 +134,7 @@ final class SpeechCaptionService: ObservableObject {
                 }
 
                 if error != nil {
-                    self.permissionMessage = "Caption berhenti. Silakan tekan Mulai Caption untuk melanjutkan."
+                    self.permissionMessage = L10n.tr("speech.caption_stopped")
                     self.stop()
                 }
             }
@@ -203,7 +203,7 @@ final class SpeechCaptionService: ObservableObject {
         case .began:
             if isRecording {
                 wasInterruptedWhileRecording = true
-                permissionMessage = "Rekaman berhenti karena interupsi audio (misalnya panggilan masuk)."
+                permissionMessage = L10n.tr("speech.audio_interruption")
                 stop()
             }
         case .ended:
@@ -216,7 +216,7 @@ final class SpeechCaptionService: ObservableObject {
     @objc private func handleWillResignActive() {
         if isRecording {
             wasInterruptedWhileRecording = true
-            permissionMessage = "Rekaman dihentikan saat aplikasi ke background. Tekan Mulai Caption untuk lanjut."
+            permissionMessage = L10n.tr("speech.background_interruption")
             stop()
         }
     }

@@ -14,8 +14,8 @@ targets:
       properties:
         UILaunchScreen: {}
         CFBundleDisplayName: Teman Tuli
-        NSMicrophoneUsageDescription: Teman Tuli membutuhkan mikrofon untuk membuat live caption saat kelas.
-        NSSpeechRecognitionUsageDescription: Teman Tuli menggunakan speech recognition untuk mengubah suara menjadi teks caption.
+        NSMicrophoneUsageDescription: Teman Tuli needs microphone access to provide live classroom captions.
+        NSSpeechRecognitionUsageDescription: Teman Tuli uses speech recognition to convert voice into live caption text.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.sulhan.temantuli
