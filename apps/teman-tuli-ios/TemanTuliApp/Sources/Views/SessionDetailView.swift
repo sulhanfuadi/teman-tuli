@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SessionDetailView: View {
     @EnvironmentObject private var session: AppSession
@@ -21,14 +22,18 @@ struct SessionDetailView: View {
                     Text(transcript.fullText)
                         .font(.body)
                         .textSelection(.enabled)
+                        .accessibilityIdentifier("detail_transcript_text")
                 }
 
                 Section("Catatan Pribadi") {
                     TextField("Tambahkan konteks penting dari kelas", text: $viewModel.notes, axis: .vertical)
-                    Button("Simpan Catatan") {
+                        .accessibilityIdentifier("detail_notes_field")
+                    Button(viewModel.isSavingNotes ? "Menyimpan..." : "Simpan Catatan") {
                         guard let token = session.token else { return }
                         Task { await viewModel.saveNotes(token: token, appSession: session) }
                     }
+                    .disabled(viewModel.isSavingNotes)
+                    .accessibilityIdentifier("detail_save_notes_button")
                 }
 
                 Section("Feedback Kualitas Caption") {
@@ -38,10 +43,13 @@ struct SessionDetailView: View {
                         }
                     }
                     TextField("Apa yang perlu diperbaiki?", text: $viewModel.feedbackComment, axis: .vertical)
-                    Button("Kirim Feedback") {
+                        .accessibilityIdentifier("detail_feedback_comment_field")
+                    Button(viewModel.isSubmittingFeedback ? "Mengirim..." : "Kirim Feedback") {
                         guard let token = session.token else { return }
                         Task { await viewModel.submitFeedback(token: token, appSession: session) }
                     }
+                    .disabled(viewModel.isSubmittingFeedback)
+                    .accessibilityIdentifier("detail_submit_feedback_button")
                 }
             } else if viewModel.isLoading {
                 ProgressView("Memuat detail...")
@@ -50,8 +58,31 @@ struct SessionDetailView: View {
                     .foregroundStyle(.secondary)
             }
 
-            if let message = viewModel.message { Text(message).foregroundStyle(.green) }
-            if let errorMessage = viewModel.errorMessage { Text(errorMessage).foregroundStyle(.red) }
+            if let message = viewModel.message {
+                Text(message)
+                    .foregroundStyle(.green)
+                    .accessibilityIdentifier("detail_success_message")
+            }
+
+            if let errorMessage = viewModel.errorMessage {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(errorMessage)
+                        .foregroundStyle(.red)
+                    if let ref = viewModel.errorRequestReference {
+                        HStack {
+                            Text("Ref: \(ref)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Button("Copy Ref") {
+                                UIPasteboard.general.string = ref
+                            }
+                            .font(.caption)
+                        }
+                    }
+                }
+                .accessibilityIdentifier("detail_error_card")
+            }
         }
         .navigationTitle("Detail Transkrip")
         .task {

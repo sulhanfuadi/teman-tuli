@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SessionsView: View {
     let apiClient: APIClient
@@ -37,6 +38,7 @@ struct SessionsView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        .accessibilityIdentifier("session_row_\(item.id)")
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
                                 pendingDeleteItem = item
@@ -46,6 +48,7 @@ struct SessionsView: View {
                             }
                         }
                     }
+                    .accessibilityIdentifier("sessions_list")
                 }
             }
             .navigationTitle("Transkrip Privat")
@@ -54,6 +57,8 @@ struct SessionsView: View {
                     guard let token = session.token else { return }
                     Task { await viewModel.load(token: token, session: session) }
                 }
+                .disabled(viewModel.isLoading || viewModel.isDeletingSession)
+                .accessibilityIdentifier("sessions_refresh_button")
             }
             .task {
                 guard let token = session.token else { return }
@@ -70,6 +75,7 @@ struct SessionsView: View {
                     Task { await viewModel.deleteSession(id: selected.id, token: token, session: session) }
                     pendingDeleteItem = nil
                 }
+                .disabled(viewModel.isDeletingSession)
                 Button("Batal", role: .cancel) {
                     pendingDeleteItem = nil
                 }
@@ -85,15 +91,32 @@ struct SessionsView: View {
                             .padding(10)
                             .background(Color.green)
                             .clipShape(Capsule())
+                            .accessibilityIdentifier("sessions_success_message")
                     }
 
                     if let errorMessage = viewModel.errorMessage {
-                        Text(errorMessage)
-                            .font(.caption)
-                            .foregroundStyle(.white)
-                            .padding(10)
-                            .background(Color.red)
-                            .clipShape(Capsule())
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(errorMessage)
+                                .font(.caption)
+                                .foregroundStyle(.white)
+                            if let ref = viewModel.errorRequestReference {
+                                HStack {
+                                    Text("Ref: \(ref)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.white.opacity(0.9))
+                                    Spacer()
+                                    Button("Copy Ref") {
+                                        UIPasteboard.general.string = ref
+                                    }
+                                    .font(.caption2)
+                                    .foregroundStyle(.white)
+                                }
+                            }
+                        }
+                        .padding(10)
+                        .background(Color.red)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .accessibilityIdentifier("sessions_error_card")
                     }
                 }
                 .padding(.bottom, 8)

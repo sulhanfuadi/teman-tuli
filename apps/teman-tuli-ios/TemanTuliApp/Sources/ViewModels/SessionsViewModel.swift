@@ -5,7 +5,9 @@ final class SessionsViewModel: ObservableObject {
     @Published var sessions: [TranscriptSession] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var errorRequestReference: String?
     @Published var successMessage: String?
+    @Published var isDeletingSession: Bool = false
 
     private let apiClient: APIClient
 
@@ -16,6 +18,7 @@ final class SessionsViewModel: ObservableObject {
     func load(token: String, session: AppSession) async {
         isLoading = true
         errorMessage = nil
+        errorRequestReference = nil
         successMessage = nil
         defer { isLoading = false }
 
@@ -26,15 +29,23 @@ final class SessionsViewModel: ObservableObject {
                 session.expireAuth()
                 return
             }
-            errorMessage = mapLoadError(error)
+            let mapped = mapLoadError(error)
+            errorMessage = mapped.message
+            errorRequestReference = mapped.requestReference
         } catch {
             errorMessage = "Gagal memuat daftar transkrip."
+            errorRequestReference = nil
         }
     }
 
     func deleteSession(id: String, token: String, session: AppSession) async {
+        guard !isDeletingSession else { return }
+
+        isDeletingSession = true
         errorMessage = nil
+        errorRequestReference = nil
         successMessage = nil
+        defer { isDeletingSession = false }
 
         do {
             try await apiClient.deleteSession(token: token, id: id)
@@ -45,22 +56,25 @@ final class SessionsViewModel: ObservableObject {
                 session.expireAuth()
                 return
             }
-            errorMessage = mapDeleteError(error)
+            let mapped = mapDeleteError(error)
+            errorMessage = mapped.message
+            errorRequestReference = mapped.requestReference
         } catch {
             errorMessage = "Gagal menghapus transkrip."
+            errorRequestReference = nil
         }
     }
 
-    private func mapLoadError(_ error: APIError) -> String {
-        APIErrorMessageFormatter.friendlyMessage(
+    private func mapLoadError(_ error: APIError) -> APIErrorPresentation {
+        APIErrorMessageFormatter.presentation(
             for: error,
             networkMessage: "Tidak bisa mengambil transkrip. Periksa koneksi/backend.",
             fallbackMessage: "Gagal memuat daftar transkrip."
         )
     }
 
-    private func mapDeleteError(_ error: APIError) -> String {
-        APIErrorMessageFormatter.friendlyMessage(
+    private func mapDeleteError(_ error: APIError) -> APIErrorPresentation {
+        APIErrorMessageFormatter.presentation(
             for: error,
             networkMessage: "Tidak bisa menghapus transkrip. Periksa koneksi/backend.",
             fallbackMessage: "Gagal menghapus transkrip."

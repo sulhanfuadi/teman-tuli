@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct LiveCaptionView: View {
     @EnvironmentObject private var session: AppSession
@@ -20,8 +21,10 @@ struct LiveCaptionView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         TextField("Judul sesi", text: $viewModel.title)
                             .textFieldStyle(.roundedBorder)
+                            .accessibilityIdentifier("session_title_field")
                         TextField("Nama kelas (opsional)", text: $viewModel.className)
                             .textFieldStyle(.roundedBorder)
+                            .accessibilityIdentifier("class_name_field")
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -48,10 +51,12 @@ struct LiveCaptionView: View {
                                 .foregroundStyle(.secondary)
                         }
                         Slider(value: $viewModel.captionFontSize, in: 28...44, step: 1)
+                            .accessibilityIdentifier("caption_size_slider")
                     }
 
                     TextField("Catatan pribadi setelah kelas (opsional)", text: $viewModel.notes, axis: .vertical)
                         .textFieldStyle(.roundedBorder)
+                        .accessibilityIdentifier("personal_notes_field")
 
                     HStack {
                         Button(viewModel.speechService.isRecording ? "Sedang merekam" : "Mulai Caption") {
@@ -84,7 +89,7 @@ struct LiveCaptionView: View {
                     if let message = viewModel.speechService.permissionMessage {
                         fallbackCard(message: message)
                     } else if let message = viewModel.errorMessage {
-                        fallbackCard(message: message)
+                        fallbackCard(message: message, requestReference: viewModel.errorRequestReference)
                     }
                 }
                 .padding()
@@ -103,13 +108,25 @@ struct LiveCaptionView: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
-    private func fallbackCard(message: String) -> some View {
+    private func fallbackCard(message: String, requestReference: String? = nil) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Label(message, systemImage: "exclamationmark.triangle")
                 .foregroundStyle(.red)
             Text("Recovery action: cek permission, koneksi backend, lalu coba Start/Save lagi.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            if let requestReference {
+                HStack {
+                    Text("Ref: \(requestReference)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Copy Ref") {
+                        UIPasteboard.general.string = requestReference
+                    }
+                    .font(.caption)
+                }
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)

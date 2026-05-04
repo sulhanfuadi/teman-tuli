@@ -15,6 +15,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var goal: String = "Akses caption kelas yang lebih inklusif"
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var errorRequestReference: String?
 
     private let apiClient: APIClient
 
@@ -32,7 +33,10 @@ final class OnboardingViewModel: ObservableObject {
     }
 
     func submit(session: AppSession) async {
+        guard !isLoading else { return }
+
         errorMessage = nil
+        errorRequestReference = nil
         session.clearNotice()
         isLoading = true
         defer { isLoading = false }
@@ -55,18 +59,21 @@ final class OnboardingViewModel: ObservableObject {
             session.token = result.1
             session.clearNotice()
         } catch let error as APIError {
-            errorMessage = mapError(error)
+            let mapped = mapError(error)
+            errorMessage = mapped.message
+            errorRequestReference = mapped.requestReference
         } catch {
             errorMessage = "Autentikasi gagal. Coba lagi."
+            errorRequestReference = nil
         }
     }
 
-    private func mapError(_ error: APIError) -> String {
+    private func mapError(_ error: APIError) -> APIErrorPresentation {
         switch error {
         case .unauthorized:
-            return "Email atau password tidak sesuai."
+            return APIErrorPresentation(message: "Email atau password tidak sesuai.", requestReference: nil)
         default:
-            return APIErrorMessageFormatter.friendlyMessage(
+            return APIErrorMessageFormatter.presentation(
                 for: error,
                 networkMessage: "Tidak bisa terhubung ke server. Periksa koneksi internet/backend.",
                 fallbackMessage: "Terjadi kesalahan saat autentikasi."

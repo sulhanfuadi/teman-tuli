@@ -7,6 +7,7 @@ final class LiveCaptionViewModel: ObservableObject {
     @Published var notes: String = ""
     @Published var saveMessage: String?
     @Published var errorMessage: String?
+    @Published var errorRequestReference: String?
     @Published var isSaving: Bool = false
     @Published var captionFontSize: Double = 34
 
@@ -15,12 +16,13 @@ final class LiveCaptionViewModel: ObservableObject {
 
     init(apiClient: APIClient, speechService: SpeechCaptionService? = nil) {
         self.apiClient = apiClient
-        self.speechService = speechService ?? SpeechCaptionService()
+        self.speechService = speechService ?? SpeechCaptionService(runtimeConfig: .disabled)
     }
 
     func startCaptioning() async {
         saveMessage = nil
         errorMessage = nil
+        errorRequestReference = nil
         await speechService.start()
     }
 
@@ -29,14 +31,18 @@ final class LiveCaptionViewModel: ObservableObject {
     }
 
     func saveTranscript(token: String, session: AppSession) async {
+        guard !isSaving else { return }
+
         guard !speechService.liveText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             errorMessage = "Belum ada transkrip untuk disimpan."
+            errorRequestReference = nil
             return
         }
 
         isSaving = true
         saveMessage = nil
         errorMessage = nil
+        errorRequestReference = nil
         defer { isSaving = false }
 
         let startedAt = speechService.sessionStartedAt ?? Date()
@@ -61,16 +67,20 @@ final class LiveCaptionViewModel: ObservableObject {
             if error == .unauthorized {
                 session.expireAuth()
                 errorMessage = nil
+                errorRequestReference = nil
                 return
             }
-            errorMessage = mapError(error)
+            let mapped = mapError(error)
+            errorMessage = mapped.message
+            errorRequestReference = mapped.requestReference
         } catch {
             errorMessage = "Gagal menyimpan transkrip. Coba lagi setelah koneksi stabil."
+            errorRequestReference = nil
         }
     }
 
-    private func mapError(_ error: APIError) -> String {
-        APIErrorMessageFormatter.friendlyMessage(
+    private func mapError(_ error: APIError) -> APIErrorPresentation {
+        APIErrorMessageFormatter.presentation(
             for: error,
             networkMessage: "Koneksi ke server gagal. Pastikan backend aktif dan internet stabil.",
             fallbackMessage: "Gagal menyimpan transkrip."

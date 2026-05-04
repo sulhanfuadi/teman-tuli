@@ -1,29 +1,50 @@
 import Foundation
 
+struct APIErrorPresentation: Equatable {
+    let message: String
+    let requestReference: String?
+}
+
 enum APIErrorMessageFormatter {
+    static func presentation(
+        for error: APIError,
+        networkMessage: String,
+        fallbackMessage: String
+    ) -> APIErrorPresentation {
+        switch error {
+        case .networkUnavailable:
+            return APIErrorPresentation(message: networkMessage, requestReference: nil)
+        case .invalidURL:
+            return APIErrorPresentation(
+                message: "Alamat server tidak valid. Periksa pengaturan endpoint API.",
+                requestReference: nil
+            )
+        case .decodingError:
+            return APIErrorPresentation(
+                message: "Respons server tidak dapat diproses. Coba lagi.",
+                requestReference: nil
+            )
+        case .unauthorized:
+            return APIErrorPresentation(message: "Sesi berakhir. Silakan login kembali.", requestReference: nil)
+        case .serverError(let statusCode, let code, let serverMessage, let requestId):
+            return APIErrorPresentation(
+                message: friendlyServerMessage(
+                    statusCode: statusCode,
+                    code: code,
+                    serverMessage: serverMessage,
+                    fallbackMessage: fallbackMessage
+                ),
+                requestReference: shortRef(requestId)
+            )
+        }
+    }
+
     static func friendlyMessage(
         for error: APIError,
         networkMessage: String,
         fallbackMessage: String
     ) -> String {
-        switch error {
-        case .networkUnavailable:
-            return networkMessage
-        case .invalidURL:
-            return "Alamat server tidak valid. Periksa pengaturan endpoint API."
-        case .decodingError:
-            return "Respons server tidak dapat diproses. Coba lagi."
-        case .unauthorized:
-            return "Sesi berakhir. Silakan login kembali."
-        case .serverError(let statusCode, let code, let serverMessage, let requestId):
-            let baseMessage = friendlyServerMessage(
-                statusCode: statusCode,
-                code: code,
-                serverMessage: serverMessage,
-                fallbackMessage: fallbackMessage
-            )
-            return appendRequestReference(baseMessage, requestId: requestId)
-        }
+        presentation(for: error, networkMessage: networkMessage, fallbackMessage: fallbackMessage).message
     }
 
     private static func friendlyServerMessage(
@@ -56,9 +77,8 @@ enum APIErrorMessageFormatter {
         }
     }
 
-    private static func appendRequestReference(_ message: String, requestId: String?) -> String {
-        guard let requestId, !requestId.isEmpty else { return message }
-        let shortRef = String(requestId.prefix(8))
-        return "\(message) (Ref: \(shortRef))"
+    private static func shortRef(_ requestId: String?) -> String? {
+        guard let requestId, !requestId.isEmpty else { return nil }
+        return String(requestId.prefix(8))
     }
 }
