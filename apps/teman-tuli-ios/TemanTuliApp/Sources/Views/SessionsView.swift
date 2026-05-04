@@ -5,6 +5,7 @@ struct SessionsView: View {
     @EnvironmentObject private var session: AppSession
     @StateObject private var viewModel: SessionsViewModel
     @State private var pendingDeleteItem: TranscriptSession?
+    @State private var isDeleteConfirmationPresented: Bool = false
 
     init(apiClient: APIClient) {
         self.apiClient = apiClient
@@ -39,6 +40,7 @@ struct SessionsView: View {
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
                                 pendingDeleteItem = item
+                                isDeleteConfirmationPresented = true
                             } label: {
                                 Label("Hapus", systemImage: "trash")
                             }
@@ -59,16 +61,20 @@ struct SessionsView: View {
             }
             .confirmationDialog(
                 "Hapus transkrip ini?",
-                item: $pendingDeleteItem,
+                isPresented: $isDeleteConfirmationPresented,
                 titleVisibility: .visible
-            ) { selected in
+            ) {
                 Button("Hapus", role: .destructive) {
+                    guard let selected = pendingDeleteItem else { return }
                     guard let token = session.token else { return }
                     Task { await viewModel.deleteSession(id: selected.id, token: token, session: session) }
+                    pendingDeleteItem = nil
                 }
-                Button("Batal", role: .cancel) {}
-            } message: { selected in
-                Text("Tindakan ini tidak bisa dibatalkan untuk \"\(selected.title)\".")
+                Button("Batal", role: .cancel) {
+                    pendingDeleteItem = nil
+                }
+            } message: {
+                Text("Tindakan ini tidak bisa dibatalkan untuk \"\(pendingDeleteItem?.title ?? "transkrip ini")\".")
             }
             .overlay(alignment: .bottom) {
                 VStack(spacing: 8) {
@@ -95,4 +101,3 @@ struct SessionsView: View {
         }
     }
 }
-
