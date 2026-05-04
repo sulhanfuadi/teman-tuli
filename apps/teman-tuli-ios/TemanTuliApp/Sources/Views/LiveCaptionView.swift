@@ -4,8 +4,13 @@ struct LiveCaptionView: View {
     @EnvironmentObject private var session: AppSession
     @StateObject private var viewModel: LiveCaptionViewModel
 
-    init(apiClient: APIClient) {
-        _viewModel = StateObject(wrappedValue: LiveCaptionViewModel(apiClient: apiClient))
+    init(apiClient: APIClient, runtimeConfig: UITestRuntimeConfig = .disabled) {
+        _viewModel = StateObject(
+            wrappedValue: LiveCaptionViewModel(
+                apiClient: apiClient,
+                speechService: SpeechCaptionService(runtimeConfig: runtimeConfig)
+            )
+        )
     }
 
     var body: some View {
@@ -32,6 +37,7 @@ struct LiveCaptionView: View {
                             .background(Color.black)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                             .accessibilityLabel("Teks caption langsung")
+                            .accessibilityIdentifier("live_caption_text")
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -52,22 +58,27 @@ struct LiveCaptionView: View {
                             Task { await viewModel.startCaptioning() }
                         }
                         .disabled(viewModel.speechService.isRecording)
+                        .accessibilityIdentifier("start_caption_button")
 
                         Button("Berhenti") { viewModel.stopCaptioning() }
                             .disabled(!viewModel.speechService.isRecording)
+                            .accessibilityIdentifier("stop_caption_button")
 
                         Button(viewModel.isSaving ? "Menyimpan..." : "Simpan Privat") {
                             guard let token = session.token else { return }
                             Task { await viewModel.saveTranscript(token: token, session: session) }
                         }
                         .disabled(viewModel.isSaving || viewModel.speechService.isRecording)
+                        .accessibilityIdentifier("save_private_button")
                     }
                     .buttonStyle(.borderedProminent)
 
                     privacyCard
 
                     if let message = viewModel.saveMessage {
-                        Text(message).foregroundStyle(.green)
+                        Text(message)
+                            .foregroundStyle(.green)
+                            .accessibilityIdentifier("save_success_message")
                     }
 
                     if let message = viewModel.speechService.permissionMessage {
@@ -104,5 +115,6 @@ struct LiveCaptionView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.red.opacity(0.08))
         .clipShape(RoundedRectangle(cornerRadius: 16))
+        .accessibilityIdentifier("fallback_card")
     }
 }

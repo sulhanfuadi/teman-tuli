@@ -10,8 +10,13 @@ final class AppSession: ObservableObject {
     @Published var user: AuthUser?
     @Published var authNotice: String?
 
-    init() {
+    init(mockAuthenticated: Bool = false) {
         token = storedToken.isEmpty ? nil : storedToken
+
+        if mockAuthenticated {
+            token = "uitest-token"
+            user = AuthUser(id: "uitest-user", name: "UITest User", email: "uitest@example.com", goal: nil)
+        }
     }
 
     var isAuthenticated: Bool { token != nil }

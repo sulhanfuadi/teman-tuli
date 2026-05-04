@@ -10,6 +10,7 @@ final class SpeechCaptionService: ObservableObject {
     @Published var permissionMessage: String?
     @Published var segments: [TranscriptSegment] = []
 
+    private let runtimeConfig: UITestRuntimeConfig
     private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "id-ID"))
     private let audioEngine = AVAudioEngine()
     private var request: SFSpeechAudioBufferRecognitionRequest?
@@ -19,8 +20,13 @@ final class SpeechCaptionService: ObservableObject {
 
     var sessionStartedAt: Date? { startedAt }
 
-    init() {
+    init(runtimeConfig: UITestRuntimeConfig = .disabled) {
+        self.runtimeConfig = runtimeConfig
         registerLifecycleObservers()
+
+        if runtimeConfig.isUITestMode, let mockTranscript = runtimeConfig.mockTranscript {
+            setMockTranscript(mockTranscript)
+        }
     }
 
     deinit {
@@ -28,6 +34,8 @@ final class SpeechCaptionService: ObservableObject {
     }
 
     func requestPermissions() async -> Bool {
+        if runtimeConfig.isUITestMode { return true }
+
         let speechAuthorized = await withCheckedContinuation { continuation in
             SFSpeechRecognizer.requestAuthorization { status in
                 continuation.resume(returning: status == .authorized)
@@ -49,6 +57,28 @@ final class SpeechCaptionService: ObservableObject {
 
     func start() async {
         guard !isRecording else { return }
+
+        if runtimeConfig.isUITestMode {
+            permissionMessage = nil
+            startedAt = Date()
+            isRecording = true
+
+            if let mockTranscript = runtimeConfig.mockTranscript {
+                setMockTranscript(mockTranscript)
+            }
+
+            if let mockInterruption = runtimeConfig.mockInterruption {
+                switch mockInterruption {
+                case .background:
+                    permissionMessage = "Rekaman dihentikan saat aplikasi ke background. Tekan Mulai Caption untuk lanjut."
+                case .audio:
+                    permissionMessage = "Rekaman berhenti karena interupsi audio (misalnya panggilan masuk)."
+                }
+                isRecording = false
+            }
+            return
+        }
+
         guard await requestPermissions() else { return }
         guard recognizer?.isAvailable == true else {
             permissionMessage = "Speech recognition Bahasa Indonesia sedang tidak tersedia."
@@ -112,8 +142,20 @@ final class SpeechCaptionService: ObservableObject {
     }
 
     func stop() {
+        if runtimeConfig.isUITestMode {
+            isRecording = false
+            return
+        }
+
         teardownAudioPipeline()
         isRecording = false
+    }
+
+    private func setMockTranscript(_ text: String) {
+        liveText = text
+        if segments.isEmpty {
+            segments = [TranscriptSegment(id: nil, text: text, startMs: 0, endMs: nil)]
+        }
     }
 
     private func teardownAudioPipeline() {

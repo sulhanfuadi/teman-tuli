@@ -3,11 +3,12 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject private var session: AppSession
     let apiClient: APIClient
+    let runtimeConfig: UITestRuntimeConfig
 
     var body: some View {
         if session.isAuthenticated {
             TabView {
-                LiveCaptionView(apiClient: apiClient)
+                LiveCaptionView(apiClient: apiClient, runtimeConfig: runtimeConfig)
                     .tabItem { Label("Caption", systemImage: "captions.bubble") }
 
                 SessionsView(apiClient: apiClient)
