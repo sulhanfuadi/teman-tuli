@@ -9,6 +9,7 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - **Testing policy (fixed):** full validation uses iOS Simulator only.
 - **Coding simulator scope:** complete (harness + XCUITest + guards + error UX).
 - **Primary remaining work:** close P0.1 + P1.7 using simulator evidence and explicit risk notes.
+- **English app migration:** completed (UI copy, speech locale en-US, error UX, tests green).
 - **Readiness label target:** simulator-ready for internal demo/pilot.
 
 ## Important Scope Decision
@@ -74,6 +75,7 @@ _Last updated: 2026-05-04 (Asia/Jakarta)_
 - **Done when:** iOS app has stable API integration UX for simulator-first validation.
 
 #### P1.6 Completion Notes (Date-Stamped)
+- `2026-05-04`: Full English iOS migration completed (Localizable.strings, English UI/error copy, speech locale en-US, transcript languageCode=en-US).
 - `2026-05-04`: Added runtime endpoint config in Settings (`APIEndpointConfig` + `LiveAPIClient` base URL provider).
 - `2026-05-04`: Added transcript delete flow in archive list with confirmation and feedback messaging.
 - `2026-05-04`: Added shared `APIErrorMessageFormatter` for `code/requestId` mapping across onboarding, sessions, detail, and live save flow.

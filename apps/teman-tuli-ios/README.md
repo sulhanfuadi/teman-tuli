@@ -43,7 +43,7 @@ Update `LiveAPIClient` base URL for LAN or remote backend testing on a real devi
 
 ## Privacy Defaults
 - No automatic transcript upload while captioning.
-- User taps `Simpan Privat` to archive a transcript.
+- User taps `Save Privately` to archive a transcript.
 - Saved sessions are scoped to the signed-in user.
 
 ## Tradeoffs

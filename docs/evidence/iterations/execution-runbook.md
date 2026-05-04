@@ -33,7 +33,7 @@ Do not move to the next batch when unresolved **Critical** failures exist withou
 ## Per-Session Protocol (Use Every Session)
 1. Start from known state (logged in, caption screen ready).
 2. Run captioning for 1-3 minutes.
-3. Stop captioning and attempt `Simpan Privat`.
+3. Stop captioning and attempt `Save Privately`.
 4. Verify archive list + detail load.
 5. Record matrix values immediately (no deferred scoring).
 

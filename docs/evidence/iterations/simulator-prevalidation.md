@@ -84,3 +84,15 @@ When iPhone is available, execute in this order:
 1. `docs/evidence/iterations/execution-runbook.md`
 2. `docs/evidence/iterations/device-test-matrix.md`
 3. `docs/evidence/iterations/p0.1-validation-log.md`
+
+### Run `2026-05-04 10:47 WIB` (English Migration Validation)
+- Build target / commit hash range: `a819105` -> `b4e81a9`
+- Scope validated:
+  - English UI copy across onboarding/live/sessions/detail/settings
+  - Speech locale default switched to `en-US`
+  - Error card copy + request reference behavior preserved
+  - Unit and UI tests passing on simulator
+
+#### Findings
+- English migration is stable for simulator-first workflow validation.
+- Speech recognition availability can still vary on simulator; harness mode remains the deterministic fallback for evidence capture.
