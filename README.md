@@ -64,6 +64,23 @@ Teman Tuli aligns with:
 - Caption feedback endpoint for iterative improvement
 - Versioned routes under `/api/v1`
 
+## App Screenshots
+Latest iOS UI preview (Graphite + Emerald theme, accessibility-first):
+
+| Live Caption Overview | Live Caption Controls |
+|---|---|
+| ![Live Caption Overview](docs/evidence/screenshots/01-live-caption-overview.png) | ![Live Caption Controls](docs/evidence/screenshots/02-live-caption-controls.png) |
+
+| Transcript Archive | Transcript Detail |
+|---|---|
+| ![Transcript Archive](docs/evidence/screenshots/03-transcripts-list.png) | ![Transcript Detail](docs/evidence/screenshots/04-transcript-detail.png) |
+
+| Notes & Feedback | Settings |
+|---|---|
+| ![Notes and Feedback](docs/evidence/screenshots/05-transcript-detail-notes-feedback.png) | ![Settings](docs/evidence/screenshots/06-settings.png) |
+
+> Screenshot files are stored in `docs/evidence/screenshots/`.
+
 ## Architecture Overview
 ### Client
 - SwiftUI + MVVM
