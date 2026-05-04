@@ -23,6 +23,7 @@ targets:
     scheme:
       testTargets:
         - TemanTuliTests
+        - TemanTuliUITests
   TemanTuliTests:
     type: bundle.unit-test
     platform: iOS
@@ -32,5 +33,17 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: TemanTuli
+  TemanTuliUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: TemanTuliApp/UITests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: TemanTuli
     dependencies:
       - target: TemanTuli

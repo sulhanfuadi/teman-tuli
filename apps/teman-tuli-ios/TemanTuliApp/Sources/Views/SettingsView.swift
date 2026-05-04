@@ -21,6 +21,7 @@ struct SettingsView: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled(true)
                         .keyboardType(.URL)
+                        .accessibilityIdentifier("settings_api_base_url_field")
 
                     Button("Simpan Endpoint") {
                         let saved = APIEndpointConfig.saveBaseURL(draftBaseURL)
@@ -34,27 +35,32 @@ struct SettingsView: View {
                             endpointError = "URL tidak valid. Gunakan format lengkap, misalnya http://localhost:3000/api/v1"
                         }
                     }
+                    .accessibilityIdentifier("settings_save_endpoint_button")
 
                     Text("Aktif: \(APIEndpointConfig.currentBaseURLString())")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("settings_active_endpoint_label")
 
                     if let endpointNotice {
                         Text(endpointNotice)
                             .font(.caption)
                             .foregroundStyle(.green)
+                            .accessibilityIdentifier("settings_endpoint_notice")
                     }
 
                     if let endpointError {
                         Text(endpointError)
                             .font(.caption)
                             .foregroundStyle(.red)
+                            .accessibilityIdentifier("settings_endpoint_error")
                     }
                 }
 
                 Section("Akun") {
                     Button("Keluar") { session.signOut() }
                         .foregroundStyle(.red)
+                        .accessibilityIdentifier("settings_signout_button")
                 }
             }
             .navigationTitle("Pengaturan")
