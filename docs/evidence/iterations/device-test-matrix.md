@@ -1,7 +1,7 @@
 # Device Test Matrix — Priority 0.1 Validation
 
 ## Objective
-Validate core flow on physical iPhone and capture actionable quality evidence for production-readiness decision.
+Validate core flow on iOS Simulator and capture actionable quality evidence for simulator-ready decision.
 
 ## Completion Gate (Must Pass)
 - All 9 sessions are filled with non-placeholder values.
@@ -22,15 +22,15 @@ Validate core flow on physical iPhone and capture actionable quality evidence fo
 ## Environment Matrix (9 Sessions)
 | Batch | Environment | Session | Duration | Readability (1-5) | Continuity (1-5) | Save Success | Confidence (1-5) | Permission Edge Case | Interruption Behavior | Save Retry Outcome | Evidence Notes |
 |---|---|---:|---:|---:|---:|---|---:|---|---|---|---|
-| Quiet | Quiet room | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Quiet | Quiet room | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Quiet | Quiet room | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Moderate | Moderate classroom noise | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Moderate | Moderate classroom noise | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Moderate | Moderate classroom noise | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Noisy | Noisy room | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Noisy | Noisy room | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
-| Noisy | Noisy room | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending device test |
+| Quiet | Quiet room | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Quiet | Quiet room | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Quiet | Quiet room | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Moderate | Moderate classroom noise | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Moderate | Moderate classroom noise | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Moderate | Moderate classroom noise | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Noisy | Noisy room | 1 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Noisy | Noisy room | 2 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
+| Noisy | Noisy room | 3 | 1-3 min | - | - | - | - | Not tested | Not triggered | Not needed | Pending simulator run |
 
 ## Example Row (Reference Only, Not Counted)
 | Batch | Environment | Session | Duration | Readability (1-5) | Continuity (1-5) | Save Success | Confidence (1-5) | Permission Edge Case | Interruption Behavior | Save Retry Outcome | Evidence Notes |
@@ -45,7 +45,7 @@ Use this exact format when reporting each 3-session batch:
 - Session 2 summary:
 - Session 3 summary:
 - E2E checklist delta (newly verified items only):
-- P1.6 interruption coverage delta:
+- P1.7 interruption coverage delta:
 - Failure modes found (if any):
 - Open unknowns after batch:
 
@@ -72,7 +72,7 @@ Use this exact format when reporting each 3-session batch:
 | Caption Session Dead-End | Critical | Start/stop path cannot continue safely | trigger condition, visible UI state, recovery success |
 | Save/Data Integrity Issue | Critical | transcript cannot be saved/retrieved correctly | payload/action, retry count, final persisted state |
 | Permission Handling Regression | High | denied/restricted permission creates broken UX | permission state, prompt behavior, guidance quality |
-| Interruption Recovery Failure | High | call/background interruption leaves stale state | interruption type, app state transition, recovery result |
+| Interruption Recovery Failure | High | interruption leaves stale state | interruption type, app state transition, recovery result |
 
 ## Unknowns Tracker (Must Be Empty at Done)
 | ID | Description | Severity | Discovered In | Owner | Mitigation Plan | Status |
@@ -83,4 +83,4 @@ Use this exact format when reporting each 3-session batch:
 - `2026-05-03`: Matrix upgraded for Priority 0.1 execution.
 - `2026-05-03`: Unknowns tracker reset to neutral baseline (no pre-filled open items).
 - `2026-05-04`: Matrix handoff finalized with fill rules + reference example for consistent scoring and logging.
-- Physical device execution is pending first Quiet batch.
+- `2026-05-04`: Scope aligned to simulator-only validation.

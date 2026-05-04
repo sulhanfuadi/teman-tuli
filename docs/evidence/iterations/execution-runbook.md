@@ -1,9 +1,9 @@
-# Priority 0.1 + P1.6 Execution Runbook (Real Device)
+# Priority 0.1 + P1.7 Execution Runbook (Simulator-Only)
 
 ## Goal
-Execute physical iPhone validation with decision-complete evidence for:
+Execute simulator validation with decision-complete evidence for:
 - **P0.1:** 9-session validation matrix closure.
-- **P1.6:** interruption/recovery runtime reliability closure.
+- **P1.7:** interruption/recovery runtime reliability closure.
 
 ## Required Execution Order (No Skips)
 1. Follow this runbook (`execution-runbook.md`).
@@ -12,22 +12,22 @@ Execute physical iPhone validation with decision-complete evidence for:
 
 Do not move to the next batch when unresolved **Critical** failures exist without mitigation notes.
 
-## Time-Boxed Plan (When iPhone Is Available)
+## Time-Boxed Plan (Simulator)
 - **T+0 to T+10 min:** pre-run setup.
 - **T+10 to T+35 min:** Quiet batch (3 sessions) + evidence write-up.
 - **T+35 to T+60 min:** Moderate batch (3 sessions) + evidence write-up.
 - **T+60 to T+85 min:** Noisy batch (3 sessions) + evidence write-up.
-- **T+85 to T+100 min:** closure gate check for P0.1 + P1.6.
+- **T+85 to T+100 min:** closure gate check for P0.1 + P1.7.
 
 ## Pre-Run Setup (5-10 min)
 - Backend API running and reachable.
 - Test account available (or register during setup).
-- iPhone battery >20%, stable network (Wi-Fi or cellular).
+- iOS Simulator booted and app installed.
 - App starts from onboarding/login screen.
 - Prepare one speaking script for consistency (~60-90 sec).
 - Prepare one intentional trigger per batch:
   - permission edge case,
-  - interruption scenario,
+  - interruption simulation,
   - save retry scenario.
 
 ## Per-Session Protocol (Use Every Session)
@@ -37,10 +37,10 @@ Do not move to the next batch when unresolved **Critical** failures exist withou
 4. Verify archive list + detail load.
 5. Record matrix values immediately (no deferred scoring).
 
-## P1.6 Required Interruption Cases (Must Be Covered)
+## P1.7 Required Interruption Cases (Must Be Covered)
 Across the 9 sessions, ensure all three are executed at least once:
 - Background app transition and return.
-- Audio interruption equivalent (call/audio takeover) and recovery.
+- Audio interruption simulation and recovery.
 - Resume behavior check: no stale recording state after interruption.
 
 ## Standardized Scoring Instructions
@@ -82,10 +82,20 @@ Evidence across all sessions must include:
 - Session 2 summary:
 - Session 3 summary:
 - E2E checklist delta (newly verified only):
-- P1.6 interruption coverage delta:
+- P1.7 interruption coverage delta:
 - Failure modes found:
 - Unknowns still open:
 ```
+
+## Quiet Batch Quick Start (Today)
+Use this exact order for the first 3 sessions:
+1. Session Q1: normal flow + private save verification.
+2. Session Q2: permission edge case (deny once, recover, retry save).
+3. Session Q3: interruption simulation (background/audio), confirm recovery and no stale state.
+
+After each session:
+- Update one matrix row immediately.
+- Add one concise summary line in `p0.1-validation-log.md`.
 
 ## Escalation & Logging Rules
 - Log all High/Critical failures in taxonomy with reproducible steps.
@@ -100,7 +110,10 @@ Evidence across all sessions must include:
 - Critical failures resolved or mitigated with reproducible notes.
 - Unknown tracker has zero critical open items.
 
-### P1.6 Closure Gate
-- Interruption handling validated for call/background/foreground equivalents.
+### P1.7 Closure Gate
+- Interruption handling validated for audio/background/foreground equivalents.
 - No stale recording state observed after interruption recovery.
 - User-facing fallback guidance confirmed clear in interruption/error states.
+
+## Known Simulator Limitation (Must Be Documented)
+Simulator evidence is valid for workflow and UX reliability, but it does not fully represent physical microphone and hardware interruption behavior. Any residual uncertainty must be stated explicitly in closure notes.
