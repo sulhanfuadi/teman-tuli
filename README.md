@@ -14,6 +14,15 @@ In many real classroom situations, Deaf students can lose critical context becau
 
 This creates learning inequality, reduces confidence during discussion, and increases cognitive load when students try to reconstruct missed content after class.
 
+## Case Study Summary
+- **Why this matters:** Classroom discussions move quickly, so missing context in real time can compound into weaker understanding after class.
+- **What I built:** A privacy-first iOS + API workflow for live captions, explicit private save, transcript archive, detail notes, and feedback loops.
+- **Key product decision:** No automatic transcript upload during active captioning; users explicitly choose when to persist data.
+- **Key technical tradeoff:** Simulator-first validation was prioritized for execution speed, while hardware-dependent microphone behavior was documented transparently as a known limitation.
+- **What I learned:** Accessibility products require equal focus on readability, trust, and failure UX — not just feature completeness.
+
+Read full case study: `docs/case-study.md`
+
 ## Target Users
 Primary users:
 - Deaf and hard-of-hearing university students.
