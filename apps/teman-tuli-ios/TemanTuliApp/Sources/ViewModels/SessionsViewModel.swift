@@ -33,7 +33,7 @@ final class SessionsViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Gagal memuat daftar transkrip."
+            errorMessage = L10n.tr("sessions.load_failed")
             errorRequestReference = nil
         }
     }
@@ -50,7 +50,7 @@ final class SessionsViewModel: ObservableObject {
         do {
             try await apiClient.deleteSession(token: token, id: id)
             sessions.removeAll { $0.id == id }
-            successMessage = "Transkrip berhasil dihapus."
+            successMessage = L10n.tr("sessions.delete_success")
         } catch let error as APIError {
             if error == .unauthorized {
                 session.expireAuth()
@@ -60,7 +60,7 @@ final class SessionsViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Gagal menghapus transkrip."
+            errorMessage = L10n.tr("sessions.delete_failed")
             errorRequestReference = nil
         }
     }
@@ -68,16 +68,16 @@ final class SessionsViewModel: ObservableObject {
     private func mapLoadError(_ error: APIError) -> APIErrorPresentation {
         APIErrorMessageFormatter.presentation(
             for: error,
-            networkMessage: "Tidak bisa mengambil transkrip. Periksa koneksi/backend.",
-            fallbackMessage: "Gagal memuat daftar transkrip."
+            networkMessage: L10n.tr("sessions.load_network_failed"),
+            fallbackMessage: L10n.tr("sessions.load_fallback")
         )
     }
 
     private func mapDeleteError(_ error: APIError) -> APIErrorPresentation {
         APIErrorMessageFormatter.presentation(
             for: error,
-            networkMessage: "Tidak bisa menghapus transkrip. Periksa koneksi/backend.",
-            fallbackMessage: "Gagal menghapus transkrip."
+            networkMessage: L10n.tr("sessions.delete_network_failed"),
+            fallbackMessage: L10n.tr("sessions.delete_fallback")
         )
     }
 }

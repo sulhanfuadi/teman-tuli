@@ -16,16 +16,16 @@ enum APIErrorMessageFormatter {
             return APIErrorPresentation(message: networkMessage, requestReference: nil)
         case .invalidURL:
             return APIErrorPresentation(
-                message: "Alamat server tidak valid. Periksa pengaturan endpoint API.",
+                message: L10n.tr("error.invalid_url"),
                 requestReference: nil
             )
         case .decodingError:
             return APIErrorPresentation(
-                message: "Respons server tidak dapat diproses. Coba lagi.",
+                message: L10n.tr("error.decoding"),
                 requestReference: nil
             )
         case .unauthorized:
-            return APIErrorPresentation(message: "Sesi berakhir. Silakan login kembali.", requestReference: nil)
+            return APIErrorPresentation(message: L10n.tr("error.unauthorized"), requestReference: nil)
         case .serverError(let statusCode, let code, let serverMessage, let requestId):
             return APIErrorPresentation(
                 message: friendlyServerMessage(
@@ -55,23 +55,23 @@ enum APIErrorMessageFormatter {
     ) -> String {
         switch code?.uppercased() {
         case "RATE_LIMITED":
-            return "Terlalu banyak permintaan. Coba lagi beberapa saat."
+            return L10n.tr("error.rate_limited")
         case "PAYLOAD_TOO_LARGE":
-            return "Data terlalu besar untuk diproses. Ringkas isi lalu coba lagi."
+            return L10n.tr("error.payload_too_large")
         case "VALIDATION_ERROR":
-            return "Input belum valid. Periksa kembali data yang diisi."
+            return L10n.tr("error.validation")
         case "NOT_FOUND":
-            return "Data yang diminta tidak ditemukan."
+            return L10n.tr("error.not_found")
         case "CONFLICT":
-            return "Terjadi konflik data. Muat ulang lalu coba lagi."
+            return L10n.tr("error.conflict")
         case "INTERNAL_ERROR":
-            return "Server sedang bermasalah. Coba lagi beberapa saat."
+            return L10n.tr("error.internal")
         default:
             if statusCode == 409 {
-                return "Terjadi konflik data. Muat ulang lalu coba lagi."
+                return L10n.tr("error.conflict")
             }
             if let serverMessage, !serverMessage.isEmpty {
-                return "Permintaan gagal: \(serverMessage)"
+                return String(format: L10n.tr("error.request_failed"), serverMessage)
             }
             return fallbackMessage
         }

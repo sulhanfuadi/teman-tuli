@@ -91,3 +91,36 @@
 "speech.caption_stopped" = "Captioning stopped. Press Start Caption to continue.";
 "speech.audio_interruption" = "Recording stopped due to an audio interruption (for example, an incoming call).";
 "speech.background_interruption" = "Recording stopped when the app moved to background. Press Start Caption to continue.";
+"error.invalid_url" = "The server address is invalid. Check the API endpoint settings.";
+"error.decoding" = "The server response could not be processed. Please try again.";
+"error.unauthorized" = "Your session has expired. Please sign in again.";
+"error.rate_limited" = "Too many requests. Please try again shortly.";
+"error.payload_too_large" = "The data is too large to process. Reduce the content and try again.";
+"error.validation" = "The input is invalid. Please review your entries.";
+"error.not_found" = "The requested data was not found.";
+"error.conflict" = "A data conflict occurred. Refresh and try again.";
+"error.internal" = "The server is having issues. Please try again shortly.";
+"error.request_failed" = "Request failed: %@";
+
+"live.default_title" = "Class Notes";
+"live.error.empty_transcript" = "No transcript is available to save yet.";
+"live.save_success" = "Transcript saved privately.";
+"live.save_failed" = "Failed to save transcript. Try again after the connection stabilizes.";
+"live.network_failed" = "Server connection failed. Ensure the backend is running and network is stable.";
+"live.save_fallback" = "Failed to save transcript.";
+
+"sessions.load_failed" = "Failed to load transcript list.";
+"sessions.delete_success" = "Transcript deleted successfully.";
+"sessions.delete_failed" = "Failed to delete transcript.";
+"sessions.load_network_failed" = "Unable to fetch transcripts. Check network/backend connection.";
+"sessions.load_fallback" = "Failed to load transcript list.";
+"sessions.delete_network_failed" = "Unable to delete transcript. Check network/backend connection.";
+"sessions.delete_fallback" = "Failed to delete transcript.";
+
+"detail.load_failed" = "Failed to load transcript details.";
+"detail.notes_updated" = "Notes updated.";
+"detail.notes_update_failed" = "Failed to update notes.";
+"detail.feedback_saved" = "Caption feedback saved.";
+"detail.feedback_failed" = "Failed to submit feedback.";
+"detail.network_failed" = "Connection failed. Check network and backend.";
+"detail.fallback_error" = "An error occurred while processing transcript data.";

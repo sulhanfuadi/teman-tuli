@@ -26,7 +26,7 @@ final class AppSession: ObservableObject {
         user = nil
     }
 
-    func expireAuth(message: String = "Sesi berakhir. Silakan login kembali.") {
+    func expireAuth(message: String = L10n.tr("error.unauthorized")) {
         signOut()
         authNotice = message
     }

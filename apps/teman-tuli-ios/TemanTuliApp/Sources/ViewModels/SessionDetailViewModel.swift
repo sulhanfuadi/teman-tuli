@@ -39,7 +39,7 @@ final class SessionDetailViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Gagal memuat detail transkrip."
+            errorMessage = L10n.tr("detail.load_failed")
             errorRequestReference = nil
         }
     }
@@ -59,7 +59,7 @@ final class SessionDetailViewModel: ObservableObject {
                 className: session.className,
                 notes: notes.isEmpty ? nil : notes
             )
-            message = "Catatan diperbarui."
+            message = L10n.tr("detail.notes_updated")
             errorMessage = nil
             errorRequestReference = nil
         } catch let error as APIError {
@@ -71,7 +71,7 @@ final class SessionDetailViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Gagal memperbarui catatan."
+            errorMessage = L10n.tr("detail.notes_update_failed")
             errorRequestReference = nil
         }
     }
@@ -90,7 +90,7 @@ final class SessionDetailViewModel: ObservableObject {
                 rating: selectedRating,
                 comment: feedbackComment.isEmpty ? nil : feedbackComment
             )
-            message = "Feedback caption tersimpan."
+            message = L10n.tr("detail.feedback_saved")
             feedbackComment = ""
             errorMessage = nil
             errorRequestReference = nil
@@ -103,7 +103,7 @@ final class SessionDetailViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Gagal mengirim feedback."
+            errorMessage = L10n.tr("detail.feedback_failed")
             errorRequestReference = nil
         }
     }
@@ -111,8 +111,8 @@ final class SessionDetailViewModel: ObservableObject {
     private func mapError(_ error: APIError) -> APIErrorPresentation {
         APIErrorMessageFormatter.presentation(
             for: error,
-            networkMessage: "Koneksi gagal. Cek jaringan dan backend.",
-            fallbackMessage: "Terjadi kesalahan saat memproses transkrip."
+            networkMessage: L10n.tr("detail.network_failed"),
+            fallbackMessage: L10n.tr("detail.fallback_error")
         )
     }
 }

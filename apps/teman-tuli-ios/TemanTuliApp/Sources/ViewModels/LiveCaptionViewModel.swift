@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 final class LiveCaptionViewModel: ObservableObject {
-    @Published var title: String = "Catatan Kelas"
+    @Published var title: String = L10n.tr("live.default_title")
     @Published var className: String = ""
     @Published var notes: String = ""
     @Published var saveMessage: String?
@@ -34,7 +34,7 @@ final class LiveCaptionViewModel: ObservableObject {
         guard !isSaving else { return }
 
         guard !speechService.liveText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            errorMessage = "Belum ada transkrip untuk disimpan."
+            errorMessage = L10n.tr("live.error.empty_transcript")
             errorRequestReference = nil
             return
         }
@@ -48,9 +48,9 @@ final class LiveCaptionViewModel: ObservableObject {
         let startedAt = speechService.sessionStartedAt ?? Date()
         let endedAt = Date()
         let payload = NewTranscriptSession(
-            title: title.isEmpty ? "Catatan Kelas" : title,
+            title: title.isEmpty ? L10n.tr("live.default_title") : title,
             className: className.isEmpty ? nil : className,
-            languageCode: "id-ID",
+            languageCode: "en-US",
             fullText: speechService.liveText,
             notes: notes.isEmpty ? nil : notes,
             startedAt: startedAt,
@@ -62,7 +62,7 @@ final class LiveCaptionViewModel: ObservableObject {
 
         do {
             _ = try await apiClient.createSession(token: token, payload: payload)
-            saveMessage = "Transkrip disimpan secara privat."
+            saveMessage = L10n.tr("live.save_success")
         } catch let error as APIError {
             if error == .unauthorized {
                 session.expireAuth()
@@ -74,7 +74,7 @@ final class LiveCaptionViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Gagal menyimpan transkrip. Coba lagi setelah koneksi stabil."
+            errorMessage = L10n.tr("live.save_failed")
             errorRequestReference = nil
         }
     }
@@ -82,8 +82,8 @@ final class LiveCaptionViewModel: ObservableObject {
     private func mapError(_ error: APIError) -> APIErrorPresentation {
         APIErrorMessageFormatter.presentation(
             for: error,
-            networkMessage: "Koneksi ke server gagal. Pastikan backend aktif dan internet stabil.",
-            fallbackMessage: "Gagal menyimpan transkrip."
+            networkMessage: L10n.tr("live.network_failed"),
+            fallbackMessage: L10n.tr("live.save_fallback")
         )
     }
 }
