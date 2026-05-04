@@ -26,7 +26,7 @@ final class SessionsViewModel: ObservableObject {
                 session.expireAuth()
                 return
             }
-            errorMessage = mapError(error)
+            errorMessage = mapLoadError(error)
         } catch {
             errorMessage = "Gagal memuat daftar transkrip."
         }
@@ -45,20 +45,25 @@ final class SessionsViewModel: ObservableObject {
                 session.expireAuth()
                 return
             }
-            errorMessage = mapError(error)
+            errorMessage = mapDeleteError(error)
         } catch {
             errorMessage = "Gagal menghapus transkrip."
         }
     }
 
-    private func mapError(_ error: APIError) -> String {
-        switch error {
-        case .networkUnavailable:
-            return "Tidak bisa mengambil transkrip. Periksa koneksi/backend."
-        case .serverError(let statusCode, _, _, _):
-            return "Gagal memproses permintaan (server \(statusCode))."
-        default:
-            return "Gagal memuat daftar transkrip."
-        }
+    private func mapLoadError(_ error: APIError) -> String {
+        APIErrorMessageFormatter.friendlyMessage(
+            for: error,
+            networkMessage: "Tidak bisa mengambil transkrip. Periksa koneksi/backend.",
+            fallbackMessage: "Gagal memuat daftar transkrip."
+        )
+    }
+
+    private func mapDeleteError(_ error: APIError) -> String {
+        APIErrorMessageFormatter.friendlyMessage(
+            for: error,
+            networkMessage: "Tidak bisa menghapus transkrip. Periksa koneksi/backend.",
+            fallbackMessage: "Gagal menghapus transkrip."
+        )
     }
 }

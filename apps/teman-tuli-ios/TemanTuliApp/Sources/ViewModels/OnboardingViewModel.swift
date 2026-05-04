@@ -1,10 +1,8 @@
 import Foundation
 
-enum AuthMode: String, CaseIterable, Identifiable {
-    case register = "Daftar"
-    case login = "Login"
-
-    var id: String { rawValue }
+enum AuthMode: String, CaseIterable {
+    case register
+    case login
 }
 
 @MainActor
@@ -66,15 +64,12 @@ final class OnboardingViewModel: ObservableObject {
         switch error {
         case .unauthorized:
             return "Email atau password tidak sesuai."
-        case .networkUnavailable:
-            return "Tidak bisa terhubung ke server. Periksa koneksi internet/backend."
-        case .serverError(let statusCode):
-            if statusCode == 409 {
-                return "Email sudah terdaftar. Coba login."
-            }
-            return "Server error (\(statusCode)). Coba lagi."
         default:
-            return "Terjadi kesalahan saat autentikasi."
+            return APIErrorMessageFormatter.friendlyMessage(
+                for: error,
+                networkMessage: "Tidak bisa terhubung ke server. Periksa koneksi internet/backend.",
+                fallbackMessage: "Terjadi kesalahan saat autentikasi."
+            )
         }
     }
 }

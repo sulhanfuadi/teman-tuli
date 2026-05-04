@@ -70,13 +70,10 @@ final class LiveCaptionViewModel: ObservableObject {
     }
 
     private func mapError(_ error: APIError) -> String {
-        switch error {
-        case .networkUnavailable:
-            return "Koneksi ke server gagal. Pastikan backend aktif dan internet stabil."
-        case .serverError(let code):
-            return "Penyimpanan gagal (server \(code))."
-        default:
-            return "Gagal menyimpan transkrip."
-        }
+        APIErrorMessageFormatter.friendlyMessage(
+            for: error,
+            networkMessage: "Koneksi ke server gagal. Pastikan backend aktif dan internet stabil.",
+            fallbackMessage: "Gagal menyimpan transkrip."
+        )
     }
 }

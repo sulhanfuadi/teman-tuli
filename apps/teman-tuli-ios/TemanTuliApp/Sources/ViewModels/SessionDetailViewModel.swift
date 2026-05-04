@@ -82,13 +82,10 @@ final class SessionDetailViewModel: ObservableObject {
     }
 
     private func mapError(_ error: APIError) -> String {
-        switch error {
-        case .networkUnavailable:
-            return "Koneksi gagal. Cek jaringan dan backend."
-        case .serverError(let code):
-            return "Server gagal memproses (\(code))."
-        default:
-            return "Terjadi kesalahan saat memproses transkrip."
-        }
+        APIErrorMessageFormatter.friendlyMessage(
+            for: error,
+            networkMessage: "Koneksi gagal. Cek jaringan dan backend.",
+            fallbackMessage: "Terjadi kesalahan saat memproses transkrip."
+        )
     }
 }
