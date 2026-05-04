@@ -16,6 +16,7 @@ final class TemanTuliUITests: XCTestCase {
             )
         )
 
+        XCTAssertTrue(app.navigationBars["Live Caption"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["live_caption_text"].waitForExistence(timeout: 5))
 
         let saveButton = app.buttons["save_private_button"]
