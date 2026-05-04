@@ -4,6 +4,7 @@ struct SessionsView: View {
     let apiClient: APIClient
     @EnvironmentObject private var session: AppSession
     @StateObject private var viewModel: SessionsViewModel
+    @State private var pendingDeleteItem: TranscriptSession?
 
     init(apiClient: APIClient) {
         self.apiClient = apiClient
@@ -35,6 +36,13 @@ struct SessionsView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                pendingDeleteItem = item
+                            } label: {
+                                Label("Hapus", systemImage: "trash")
+                            }
+                        }
                     }
                 }
             }
@@ -49,17 +57,42 @@ struct SessionsView: View {
                 guard let token = session.token else { return }
                 await viewModel.load(token: token, session: session)
             }
-            .overlay(alignment: .bottom) {
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background(Color.red)
-                        .clipShape(Capsule())
-                        .padding(.bottom, 8)
+            .confirmationDialog(
+                "Hapus transkrip ini?",
+                item: $pendingDeleteItem,
+                titleVisibility: .visible
+            ) { selected in
+                Button("Hapus", role: .destructive) {
+                    guard let token = session.token else { return }
+                    Task { await viewModel.deleteSession(id: selected.id, token: token, session: session) }
                 }
+                Button("Batal", role: .cancel) {}
+            } message: { selected in
+                Text("Tindakan ini tidak bisa dibatalkan untuk \"\(selected.title)\".")
+            }
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 8) {
+                    if let successMessage = viewModel.successMessage {
+                        Text(successMessage)
+                            .font(.caption)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background(Color.green)
+                            .clipShape(Capsule())
+                    }
+
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .font(.caption)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background(Color.red)
+                            .clipShape(Capsule())
+                    }
+                }
+                .padding(.bottom, 8)
             }
         }
     }
 }
+
