@@ -1,6 +1,7 @@
 import Foundation
 
-enum AuthMode: String, CaseIterable {
+enum AuthMode: String, CaseIterable, Identifiable {
+    var id: String { rawValue }
     case register
     case login
 }

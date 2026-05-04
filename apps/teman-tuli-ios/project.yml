@@ -29,5 +29,8 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: TemanTuliApp/Tests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: TemanTuli
