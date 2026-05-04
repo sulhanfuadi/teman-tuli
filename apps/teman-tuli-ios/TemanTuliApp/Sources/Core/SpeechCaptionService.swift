@@ -96,9 +96,24 @@ final class SpeechCaptionService: ObservableObject {
         request = newRequest
 
         let inputNode = audioEngine.inputNode
-        let recordingFormat = inputNode.outputFormat(forBus: 0)
+
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [.duckOthers])
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            permissionMessage = L10n.tr("speech.audio_session_failed")
+            teardownAudioPipeline()
+            return
+        }
+
+        let candidateFormat = inputNode.outputFormat(forBus: 0)
+        let tapFormat: AVAudioFormat? = (candidateFormat.channelCount > 0 && candidateFormat.sampleRate > 0)
+            ? candidateFormat
+            : nil
+
         inputNode.removeTap(onBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: tapFormat) { [weak self] buffer, _ in
             self?.request?.append(buffer)
         }
 

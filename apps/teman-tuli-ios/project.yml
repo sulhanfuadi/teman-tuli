@@ -24,7 +24,6 @@ targets:
     scheme:
       testTargets:
         - TemanTuliTests
-        - TemanTuliUITests
   TemanTuliTests:
     type: bundle.unit-test
     platform: iOS

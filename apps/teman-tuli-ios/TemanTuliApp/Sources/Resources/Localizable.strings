@@ -110,6 +110,7 @@
 "speech.permission_required" = "Enable microphone and speech recognition permissions to use live caption.";
 "speech.unavailable" = "English speech recognition is currently unavailable.";
 "speech.mic_start_failed" = "Failed to start microphone recording.";
+"speech.audio_session_failed" = "Could not activate audio session. Please try again.";
 "speech.request_setup_failed" = "Failed to prepare speech recognition request.";
 "speech.caption_stopped" = "Captioning stopped. Press Start Caption to continue.";
 "speech.audio_interruption" = "Recording stopped due to an audio interruption (for example, an incoming call).";
