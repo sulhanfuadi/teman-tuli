@@ -79,6 +79,12 @@ final class SpeechCaptionService: ObservableObject {
             return
         }
 
+#if targetEnvironment(simulator)
+        permissionMessage = L10n.tr("speech.simulator_unavailable")
+        isRecording = false
+        return
+#endif
+
         guard await requestPermissions() else { return }
         guard recognizer?.isAvailable == true else {
             permissionMessage = L10n.tr("speech.unavailable")

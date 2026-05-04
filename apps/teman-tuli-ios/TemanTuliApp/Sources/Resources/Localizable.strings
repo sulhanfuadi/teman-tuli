@@ -115,6 +115,7 @@
 "speech.caption_stopped" = "Captioning stopped. Press Start Caption to continue.";
 "speech.audio_interruption" = "Recording stopped due to an audio interruption (for example, an incoming call).";
 "speech.background_interruption" = "Recording stopped when the app moved to background. Press Start Caption to continue.";
+"speech.simulator_unavailable" = "Live microphone caption is unavailable on iOS Simulator. Please use a physical iPhone for Start Caption.";
 
 "error.invalid_url" = "The server address is invalid. Check API endpoint settings.";
 "error.decoding" = "The server response could not be processed. Please try again.";
