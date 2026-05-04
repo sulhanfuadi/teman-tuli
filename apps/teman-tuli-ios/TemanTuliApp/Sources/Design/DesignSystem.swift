@@ -20,8 +20,14 @@ enum TTCornerRadius {
 enum TTColor {
     static let brand = Color(uiColor: UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.44, green: 0.67, blue: 1.0, alpha: 1.0)
-            : UIColor(red: 0.0, green: 0.42, blue: 0.9, alpha: 1.0)
+            ? UIColor(red: 0.36, green: 0.90, blue: 0.69, alpha: 1.0)
+            : UIColor(red: 0.07, green: 0.56, blue: 0.42, alpha: 1.0)
+    })
+
+    static let brandDeep = Color(uiColor: UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 0.14, green: 0.19, blue: 0.17, alpha: 1.0)
+            : UIColor(red: 0.10, green: 0.16, blue: 0.14, alpha: 1.0)
     })
 
     static let background = Color(uiColor: UIColor { trait in

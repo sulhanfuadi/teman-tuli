@@ -8,7 +8,7 @@ struct BrandMarkView: View {
             RoundedRectangle(cornerRadius: size * 0.3, style: .continuous)
                 .fill(
                     LinearGradient(
-                        colors: [TTColor.brand, TTColor.brand.opacity(0.72)],
+                        colors: [TTColor.brand, TTColor.brandDeep],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -31,7 +31,7 @@ struct BrandMarkView: View {
             .offset(x: size * 0.02)
         }
         .frame(width: size, height: size)
-        .shadow(color: TTColor.brand.opacity(0.25), radius: size * 0.14, x: 0, y: size * 0.08)
+        .shadow(color: TTColor.brand.opacity(0.22), radius: size * 0.16, x: 0, y: size * 0.10)
     }
 }
 

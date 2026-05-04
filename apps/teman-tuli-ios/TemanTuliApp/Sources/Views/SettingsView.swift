@@ -6,28 +6,27 @@ struct SettingsView: View {
     @State private var draftBaseURL: String = ""
     @State private var endpointNotice: String?
     @State private var endpointError: String?
+    @State private var showDeveloperOptions: Bool = false
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: TTSpacing.lg) {
+            List {
+                Section {
                     BrandWordmarkView(subtitle: L10n.tr("settings.nav_title"))
+                        .padding(.vertical, TTSpacing.xs)
+                        .listRowInsets(EdgeInsets(top: TTSpacing.sm, leading: TTSpacing.md, bottom: TTSpacing.sm, trailing: TTSpacing.md))
+                }
 
-                    SectionCard {
+                Section(L10n.tr("settings.section.accessibility")) {
+                    Label(L10n.tr("settings.accessibility.large_caption"), systemImage: "captions.bubble")
+                    Label(L10n.tr("settings.accessibility.language"), systemImage: "globe")
+                    Label(L10n.tr("settings.accessibility.private_transcript"), systemImage: "lock.shield")
+                }
+
+#if DEBUG
+                Section {
+                    DisclosureGroup(isExpanded: $showDeveloperOptions) {
                         VStack(alignment: .leading, spacing: TTSpacing.sm) {
-                            Text(L10n.tr("settings.section.accessibility"))
-                                .font(TTTypography.headline)
-                            InlineNotice(message: L10n.tr("settings.accessibility.large_caption"))
-                            InlineNotice(message: L10n.tr("settings.accessibility.language"))
-                            InlineNotice(message: L10n.tr("settings.accessibility.private_transcript"))
-                        }
-                    }
-
-                    SectionCard {
-                        VStack(alignment: .leading, spacing: TTSpacing.sm) {
-                            Text(L10n.tr("settings.section.api"))
-                                .font(TTTypography.headline)
-
                             TextField(L10n.tr("settings.api.base_url"), text: $draftBaseURL)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled(true)
@@ -63,19 +62,26 @@ struct SettingsView: View {
                                     .accessibilityIdentifier("settings_endpoint_error")
                             }
                         }
-                    }
-
-                    SectionCard {
-                        Button(L10n.tr("settings.signout")) { session.signOut() }
-                            .buttonStyle(SecondaryActionButtonStyle())
-                            .foregroundStyle(TTColor.danger)
-                            .accessibilityIdentifier("settings_signout_button")
+                        .padding(.top, TTSpacing.xs)
+                    } label: {
+                        Label(L10n.tr("settings.section.developer"), systemImage: "hammer")
                     }
                 }
-                .padding(TTSpacing.lg)
+#endif
+
+                Section {
+                    Button(role: .destructive) { session.signOut() } label: {
+                        Text(L10n.tr("settings.signout"))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .accessibilityIdentifier("settings_signout_button")
+                }
             }
+            .scrollContentBackground(.hidden)
             .background(TTColor.background.ignoresSafeArea())
-            .navigationTitle(L10n.tr("settings.nav_title"))
+            .listStyle(.insetGrouped)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
             .onAppear {
                 draftBaseURL = APIEndpointConfig.currentBaseURLString()
             }

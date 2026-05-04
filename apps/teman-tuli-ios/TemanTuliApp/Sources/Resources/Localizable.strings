@@ -97,6 +97,7 @@
 "settings.accessibility.large_caption" = "Large, high-contrast caption surfaces";
 "settings.accessibility.language" = "Primary language: English (en-US)";
 "settings.accessibility.private_transcript" = "Private transcripts by default";
+"settings.section.developer" = "Developer Options";
 "settings.section.api" = "API Server";
 "settings.api.base_url" = "API Base URL";
 "settings.api.save_endpoint" = "Save Endpoint";

@@ -101,7 +101,8 @@ struct OnboardingView: View {
                 .padding(TTSpacing.lg)
             }
             .background(TTColor.background.ignoresSafeArea())
-            .navigationTitle(L10n.tr("app.title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 }
