@@ -15,17 +15,17 @@ enum APIError: Error, Equatable {
     case invalidURL
     case unauthorized
     case networkUnavailable
-    case serverError(statusCode: Int)
+    case serverError(statusCode: Int, code: String? = nil, message: String? = nil, requestId: String? = nil)
     case decodingError
 }
 
 final class LiveAPIClient: APIClient {
-    private let baseURL: URL
+    private let baseURLProvider: () -> URL
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
-    init(baseURL: URL = URL(string: "http://localhost:3000/api/v1")!) {
-        self.baseURL = baseURL
+    init(baseURLProvider: @escaping () -> URL = { APIEndpointConfig.currentBaseURL() }) {
+        self.baseURLProvider = baseURLProvider
         decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         encoder = JSONEncoder()
@@ -73,7 +73,8 @@ final class LiveAPIClient: APIClient {
     }
 
     private func request<T: Decodable, B: Encodable>(path: String, method: String, body: B?, token: String?) async throws -> T {
-        guard let url = URL(string: path, relativeTo: baseURL) else { throw APIError.invalidURL }
+        let baseURL = baseURLProvider()
+        let url = baseURL.appendingPathComponent(path)
 
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -100,7 +101,13 @@ final class LiveAPIClient: APIClient {
         case 401:
             throw APIError.unauthorized
         default:
-            throw APIError.serverError(statusCode: httpResponse.statusCode)
+            let envelope = try? decoder.decode(ErrorEnvelope.self, from: data)
+            throw APIError.serverError(
+                statusCode: httpResponse.statusCode,
+                code: envelope?.code,
+                message: envelope?.message,
+                requestId: envelope?.requestId
+            )
         }
 
         if T.self == EmptyResponse.self { return EmptyResponse() as! T }
@@ -113,3 +120,8 @@ final class LiveAPIClient: APIClient {
 }
 
 private struct EmptyResponse: Codable {}
+private struct ErrorEnvelope: Codable {
+    let message: String?
+    let code: String?
+    let requestId: String?
+}
