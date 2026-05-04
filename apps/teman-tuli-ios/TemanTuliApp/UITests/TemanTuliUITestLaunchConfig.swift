@@ -1,9 +1,14 @@
 import Foundation
 
+enum UITestInterruption: String {
+    case background
+    case audio
+}
+
 struct TemanTuliUITestLaunchConfig {
     var authenticated: Bool = true
     var transcript: String = "Transkrip uji simulator"
-    var interruption: MockInterruptionType?
+    var interruption: UITestInterruption?
     var mockAPIBaseURL: String?
 
     func launchArguments() -> [String] {
