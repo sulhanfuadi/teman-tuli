@@ -7,6 +7,15 @@ enum CaptionFeedbackRating: String, Codable, CaseIterable, Identifiable {
     case excellent = "EXCELLENT"
 
     var id: String { rawValue }
+
+    var displayLabel: String {
+        switch self {
+        case .poor: return "Poor"
+        case .okay: return "Okay"
+        case .good: return "Good"
+        case .excellent: return "Excellent"
+        }
+    }
 }
 
 struct TranscriptSegment: Codable, Identifiable, Equatable {

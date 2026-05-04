@@ -15,29 +15,37 @@ struct SessionsView: View {
 
     var body: some View {
         NavigationStack {
-            Group {
+            ZStack(alignment: .bottom) {
+                TTColor.background.ignoresSafeArea()
+
                 if viewModel.isLoading {
                     ProgressView(L10n.tr("sessions.loading"))
                 } else if viewModel.sessions.isEmpty {
-                    ContentUnavailableView(
-                        L10n.tr("sessions.empty.title"),
-                        systemImage: "captions.bubble",
-                        description: Text(L10n.tr("sessions.empty.description"))
-                    )
+                    VStack {
+                        EmptyStateView(
+                            title: L10n.tr("sessions.empty.title"),
+                            subtitle: L10n.tr("sessions.empty.description"),
+                            systemImage: "captions.bubble"
+                        )
+                        .padding(TTSpacing.lg)
+                        Spacer()
+                    }
                 } else {
                     List(viewModel.sessions) { item in
                         NavigationLink(destination: SessionDetailView(apiClient: apiClient, sessionId: item.id)) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(item.title).font(.headline)
+                            VStack(alignment: .leading, spacing: TTSpacing.xs) {
+                                Text(item.title).font(TTTypography.headline)
                                 Text(item.className ?? L10n.tr("sessions.class_name_fallback"))
-                                    .font(.subheadline)
+                                    .font(TTTypography.body)
                                     .foregroundStyle(.secondary)
                                 Text(item.fullText)
-                                    .font(.caption)
+                                    .font(TTTypography.caption)
                                     .lineLimit(2)
                                     .foregroundStyle(.secondary)
                             }
+                            .padding(.vertical, TTSpacing.xs)
                         }
+                        .listRowBackground(TTColor.surface)
                         .accessibilityIdentifier("session_row_\(item.id)")
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
@@ -48,8 +56,40 @@ struct SessionsView: View {
                             }
                         }
                     }
+                    .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
                     .accessibilityIdentifier("sessions_list")
                 }
+
+                VStack(spacing: TTSpacing.xs) {
+                    if let successMessage = viewModel.successMessage {
+                        StatusCard(style: .success, message: successMessage)
+                            .accessibilityIdentifier("sessions_success_message")
+                    }
+
+                    if let errorMessage = viewModel.errorMessage {
+                        SectionCard {
+                            VStack(alignment: .leading, spacing: TTSpacing.xs) {
+                                StatusCard(style: .error, message: errorMessage)
+                                if let ref = viewModel.errorRequestReference {
+                                    HStack {
+                                        Text(String(format: L10n.tr("common.ref"), ref))
+                                            .font(TTTypography.caption)
+                                            .foregroundStyle(.secondary)
+                                        Spacer()
+                                        Button(L10n.tr("common.copy_ref")) {
+                                            UIPasteboard.general.string = ref
+                                        }
+                                        .font(TTTypography.caption)
+                                    }
+                                }
+                            }
+                            .accessibilityIdentifier("sessions_error_card")
+                        }
+                    }
+                }
+                .padding(.horizontal, TTSpacing.lg)
+                .padding(.bottom, TTSpacing.md)
             }
             .navigationTitle(L10n.tr("sessions.nav_title"))
             .toolbar {
@@ -80,51 +120,7 @@ struct SessionsView: View {
                     pendingDeleteItem = nil
                 }
             } message: {
-                Text(
-                    String(
-                        format: L10n.tr("sessions.delete.message"),
-                        pendingDeleteItem?.title ?? L10n.tr("sessions.delete.fallback_title")
-                    )
-                )
-            }
-            .overlay(alignment: .bottom) {
-                VStack(spacing: 8) {
-                    if let successMessage = viewModel.successMessage {
-                        Text(successMessage)
-                            .font(.caption)
-                            .foregroundStyle(.white)
-                            .padding(10)
-                            .background(Color.green)
-                            .clipShape(Capsule())
-                            .accessibilityIdentifier("sessions_success_message")
-                    }
-
-                    if let errorMessage = viewModel.errorMessage {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(errorMessage)
-                                .font(.caption)
-                                .foregroundStyle(.white)
-                            if let ref = viewModel.errorRequestReference {
-                                HStack {
-                                    Text(String(format: L10n.tr("common.ref"), ref))
-                                        .font(.caption2)
-                                        .foregroundStyle(.white.opacity(0.9))
-                                    Spacer()
-                                    Button(L10n.tr("common.copy_ref")) {
-                                        UIPasteboard.general.string = ref
-                                    }
-                                    .font(.caption2)
-                                    .foregroundStyle(.white)
-                                }
-                            }
-                        }
-                        .padding(10)
-                        .background(Color.red)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .accessibilityIdentifier("sessions_error_card")
-                    }
-                }
-                .padding(.bottom, 8)
+                Text(String(format: L10n.tr("sessions.delete.message"), pendingDeleteItem?.title ?? L10n.tr("sessions.delete.fallback_title")))
             }
         }
     }

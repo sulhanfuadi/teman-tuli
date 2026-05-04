@@ -6,19 +6,22 @@ struct RootView: View {
     let runtimeConfig: UITestRuntimeConfig
 
     var body: some View {
-        if session.isAuthenticated {
-            TabView {
-                LiveCaptionView(apiClient: apiClient, runtimeConfig: runtimeConfig)
-                    .tabItem { Label(L10n.tr("tab.caption"), systemImage: "captions.bubble") }
+        Group {
+            if session.isAuthenticated {
+                TabView {
+                    LiveCaptionView(apiClient: apiClient, runtimeConfig: runtimeConfig)
+                        .tabItem { Label(L10n.tr("tab.caption"), systemImage: "captions.bubble") }
 
-                SessionsView(apiClient: apiClient)
-                    .tabItem { Label(L10n.tr("tab.transcripts"), systemImage: "doc.text") }
+                    SessionsView(apiClient: apiClient)
+                        .tabItem { Label(L10n.tr("tab.transcripts"), systemImage: "doc.text") }
 
-                SettingsView()
-                    .tabItem { Label(L10n.tr("tab.settings"), systemImage: "gearshape") }
+                    SettingsView()
+                        .tabItem { Label(L10n.tr("tab.settings"), systemImage: "gearshape") }
+                }
+            } else {
+                OnboardingView(apiClient: apiClient)
             }
-        } else {
-            OnboardingView(apiClient: apiClient)
         }
+        .tint(TTColor.brand)
     }
 }
