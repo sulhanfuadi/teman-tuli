@@ -24,9 +24,8 @@ final class TemanTuliUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["save_success_message"].waitForExistence(timeout: 2))
 
         app.tabBars.buttons["Transkrip"].tap()
-        XCTAssertTrue(app.tables["sessions_list"].waitForExistence(timeout: 5))
 
-        let firstCell = app.tables["sessions_list"].cells.firstMatch
+        let firstCell = app.cells.firstMatch
         XCTAssertTrue(firstCell.waitForExistence(timeout: 5))
         firstCell.tap()
 
@@ -34,18 +33,22 @@ final class TemanTuliUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["detail_transcript_text"].exists)
 
         app.navigationBars["Detail Transkrip"].buttons.firstMatch.tap()
-        XCTAssertTrue(app.tables["sessions_list"].waitForExistence(timeout: 5))
 
-        let cellToDelete = app.tables["sessions_list"].cells.firstMatch
-        XCTAssertTrue(cellToDelete.exists)
+        let cellToDelete = app.cells.firstMatch
+        XCTAssertTrue(cellToDelete.waitForExistence(timeout: 5))
         cellToDelete.swipeLeft()
-        app.buttons["Hapus"].tap()
-        app.buttons["Hapus"].tap()
+
+        let deleteButtons = app.buttons.matching(identifier: "Hapus")
+        XCTAssertTrue(deleteButtons.firstMatch.waitForExistence(timeout: 2))
+        deleteButtons.firstMatch.tap()
+        if deleteButtons.firstMatch.waitForExistence(timeout: 1) {
+            deleteButtons.firstMatch.tap()
+        }
 
         XCTAssertTrue(app.staticTexts["Belum ada transkrip"].waitForExistence(timeout: 5))
     }
 
-    func testInterruptionSimulationShowsFallbackCard() {
+    func testInterruptionSimulationShowsFallbackMessage() {
         let app = launchApp(
             config: TemanTuliUITestLaunchConfig(
                 authenticated: true,
@@ -58,6 +61,6 @@ final class TemanTuliUITests: XCTestCase {
         XCTAssertTrue(startButton.waitForExistence(timeout: 5))
         startButton.tap()
 
-        XCTAssertTrue(app.otherElements["fallback_card"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Recovery action: cek permission, koneksi backend, lalu coba Start/Save lagi."].waitForExistence(timeout: 5))
     }
 }

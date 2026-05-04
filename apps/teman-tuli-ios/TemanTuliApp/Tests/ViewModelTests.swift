@@ -230,7 +230,14 @@ final class ViewModelTests: XCTestCase {
         )
 
         XCTAssertTrue(message.contains("Terlalu banyak permintaan"))
-        XCTAssertTrue(message.contains("Ref: req-1234"))
+        let presentation = APIErrorMessageFormatter.presentation(
+            for: error,
+            networkMessage: "network",
+            fallbackMessage: "fallback"
+        )
+
+        XCTAssertTrue(presentation.message.contains("Terlalu banyak permintaan"))
+        XCTAssertEqual(presentation.requestReference, "req-1234")
     }
 
     private func sampleSession(id: String) -> TranscriptSession {
