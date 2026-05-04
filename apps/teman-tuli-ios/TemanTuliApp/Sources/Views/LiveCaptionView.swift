@@ -19,19 +19,19 @@ struct LiveCaptionView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     VStack(alignment: .leading, spacing: 12) {
-                        TextField("Judul sesi", text: $viewModel.title)
+                        TextField(L10n.tr("live.session_title"), text: $viewModel.title)
                             .textFieldStyle(.roundedBorder)
                             .accessibilityIdentifier("session_title_field")
-                        TextField("Nama kelas (opsional)", text: $viewModel.className)
+                        TextField(L10n.tr("live.class_name_optional"), text: $viewModel.className)
                             .textFieldStyle(.roundedBorder)
                             .accessibilityIdentifier("class_name_field")
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Live Caption")
+                        Text(L10n.tr("live.title"))
                             .font(.headline)
 
-                        Text(viewModel.speechService.liveText.isEmpty ? "Tekan Mulai Caption untuk menampilkan transkrip kelas di sini." : viewModel.speechService.liveText)
+                        Text(viewModel.speechService.liveText.isEmpty ? L10n.tr("live.placeholder") : viewModel.speechService.liveText)
                             .font(.system(size: viewModel.captionFontSize, weight: .semibold, design: .rounded))
                             .lineSpacing(10)
                             .foregroundStyle(.white)
@@ -39,13 +39,13 @@ struct LiveCaptionView: View {
                             .padding()
                             .background(Color.black)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .accessibilityLabel("Teks caption langsung")
+                            .accessibilityLabel(L10n.tr("live.accessibility.live_text"))
                             .accessibilityIdentifier("live_caption_text")
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("Ukuran Caption")
+                            Text(L10n.tr("live.caption_size"))
                             Spacer()
                             Text("\(Int(viewModel.captionFontSize))")
                                 .foregroundStyle(.secondary)
@@ -54,22 +54,22 @@ struct LiveCaptionView: View {
                             .accessibilityIdentifier("caption_size_slider")
                     }
 
-                    TextField("Catatan pribadi setelah kelas (opsional)", text: $viewModel.notes, axis: .vertical)
+                    TextField(L10n.tr("live.personal_notes_optional"), text: $viewModel.notes, axis: .vertical)
                         .textFieldStyle(.roundedBorder)
                         .accessibilityIdentifier("personal_notes_field")
 
                     HStack {
-                        Button(viewModel.speechService.isRecording ? "Sedang merekam" : "Mulai Caption") {
+                        Button(viewModel.speechService.isRecording ? L10n.tr("live.recording") : L10n.tr("live.start")) {
                             Task { await viewModel.startCaptioning() }
                         }
                         .disabled(viewModel.speechService.isRecording)
                         .accessibilityIdentifier("start_caption_button")
 
-                        Button("Berhenti") { viewModel.stopCaptioning() }
+                        Button(L10n.tr("live.stop")) { viewModel.stopCaptioning() }
                             .disabled(!viewModel.speechService.isRecording)
                             .accessibilityIdentifier("stop_caption_button")
 
-                        Button(viewModel.isSaving ? "Menyimpan..." : "Simpan Privat") {
+                        Button(viewModel.isSaving ? L10n.tr("live.saving") : L10n.tr("live.save_private")) {
                             guard let token = session.token else { return }
                             Task { await viewModel.saveTranscript(token: token, session: session) }
                         }
@@ -94,12 +94,12 @@ struct LiveCaptionView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Live Caption")
+            .navigationTitle(L10n.tr("live.title"))
         }
     }
 
     private var privacyCard: some View {
-        Label("Transkrip tidak diunggah otomatis. Data hanya dikirim saat kamu menekan Simpan Privat.", systemImage: "lock.shield")
+        Label(L10n.tr("live.privacy_note"), systemImage: "lock.shield")
             .font(.callout)
             .foregroundStyle(.secondary)
             .padding()
@@ -112,16 +112,16 @@ struct LiveCaptionView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label(message, systemImage: "exclamationmark.triangle")
                 .foregroundStyle(.red)
-            Text("Recovery action: cek permission, koneksi backend, lalu coba Start/Save lagi.")
+            Text(L10n.tr("live.recovery_action"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if let requestReference {
                 HStack {
-                    Text("Ref: \(requestReference)")
+                    Text(String(format: L10n.tr("common.ref"), requestReference))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Button("Copy Ref") {
+                    Button(L10n.tr("common.copy_ref")) {
                         UIPasteboard.general.string = requestReference
                     }
                     .font(.caption)

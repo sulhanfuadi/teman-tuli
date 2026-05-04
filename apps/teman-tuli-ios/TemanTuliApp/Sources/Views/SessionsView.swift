@@ -17,19 +17,19 @@ struct SessionsView: View {
         NavigationStack {
             Group {
                 if viewModel.isLoading {
-                    ProgressView("Memuat transkrip...")
+                    ProgressView(L10n.tr("sessions.loading"))
                 } else if viewModel.sessions.isEmpty {
                     ContentUnavailableView(
-                        "Belum ada transkrip",
+                        L10n.tr("sessions.empty.title"),
                         systemImage: "captions.bubble",
-                        description: Text("Simpan transkrip dari Live Caption untuk melihat arsip privat di sini.")
+                        description: Text(L10n.tr("sessions.empty.description"))
                     )
                 } else {
                     List(viewModel.sessions) { item in
                         NavigationLink(destination: SessionDetailView(apiClient: apiClient, sessionId: item.id)) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(item.title).font(.headline)
-                                Text(item.className ?? "Tanpa nama kelas")
+                                Text(item.className ?? L10n.tr("sessions.class_name_fallback"))
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 Text(item.fullText)
@@ -44,16 +44,16 @@ struct SessionsView: View {
                                 pendingDeleteItem = item
                                 isDeleteConfirmationPresented = true
                             } label: {
-                                Label("Hapus", systemImage: "trash")
+                                Label(L10n.tr("common.delete"), systemImage: "trash")
                             }
                         }
                     }
                     .accessibilityIdentifier("sessions_list")
                 }
             }
-            .navigationTitle("Transkrip Privat")
+            .navigationTitle(L10n.tr("sessions.nav_title"))
             .toolbar {
-                Button("Refresh") {
+                Button(L10n.tr("common.refresh")) {
                     guard let token = session.token else { return }
                     Task { await viewModel.load(token: token, session: session) }
                 }
@@ -65,22 +65,27 @@ struct SessionsView: View {
                 await viewModel.load(token: token, session: session)
             }
             .confirmationDialog(
-                "Hapus transkrip ini?",
+                L10n.tr("sessions.delete.confirm_title"),
                 isPresented: $isDeleteConfirmationPresented,
                 titleVisibility: .visible
             ) {
-                Button("Hapus", role: .destructive) {
+                Button(L10n.tr("common.delete"), role: .destructive) {
                     guard let selected = pendingDeleteItem else { return }
                     guard let token = session.token else { return }
                     Task { await viewModel.deleteSession(id: selected.id, token: token, session: session) }
                     pendingDeleteItem = nil
                 }
                 .disabled(viewModel.isDeletingSession)
-                Button("Batal", role: .cancel) {
+                Button(L10n.tr("common.cancel"), role: .cancel) {
                     pendingDeleteItem = nil
                 }
             } message: {
-                Text("Tindakan ini tidak bisa dibatalkan untuk \"\(pendingDeleteItem?.title ?? "transkrip ini")\".")
+                Text(
+                    String(
+                        format: L10n.tr("sessions.delete.message"),
+                        pendingDeleteItem?.title ?? L10n.tr("sessions.delete.fallback_title")
+                    )
+                )
             }
             .overlay(alignment: .bottom) {
                 VStack(spacing: 8) {
@@ -101,11 +106,11 @@ struct SessionsView: View {
                                 .foregroundStyle(.white)
                             if let ref = viewModel.errorRequestReference {
                                 HStack {
-                                    Text("Ref: \(ref)")
+                                    Text(String(format: L10n.tr("common.ref"), ref))
                                         .font(.caption2)
                                         .foregroundStyle(.white.opacity(0.9))
                                     Spacer()
-                                    Button("Copy Ref") {
+                                    Button(L10n.tr("common.copy_ref")) {
                                         UIPasteboard.general.string = ref
                                     }
                                     .font(.caption2)

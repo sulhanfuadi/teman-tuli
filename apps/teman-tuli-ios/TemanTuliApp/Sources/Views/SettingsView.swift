@@ -10,34 +10,34 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Aksesibilitas") {
-                    Label("Caption besar dan kontras tinggi untuk ruang kelas", systemImage: "textformat.size")
-                    Label("Bahasa utama: Indonesia (id-ID)", systemImage: "globe")
-                    Label("Transkrip privat secara default", systemImage: "lock")
+                Section(L10n.tr("settings.section.accessibility")) {
+                    Label(L10n.tr("settings.accessibility.large_caption"), systemImage: "textformat.size")
+                    Label(L10n.tr("settings.accessibility.language"), systemImage: "globe")
+                    Label(L10n.tr("settings.accessibility.private_transcript"), systemImage: "lock")
                 }
 
-                Section("Server API") {
-                    TextField("Base URL API", text: $draftBaseURL)
+                Section(L10n.tr("settings.section.api")) {
+                    TextField(L10n.tr("settings.api.base_url"), text: $draftBaseURL)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled(true)
                         .keyboardType(.URL)
                         .accessibilityIdentifier("settings_api_base_url_field")
 
-                    Button("Simpan Endpoint") {
+                    Button(L10n.tr("settings.api.save_endpoint")) {
                         let saved = APIEndpointConfig.saveBaseURL(draftBaseURL)
                         if saved {
                             storedBaseURL = APIEndpointConfig.currentBaseURLString()
                             draftBaseURL = storedBaseURL
                             endpointError = nil
-                            endpointNotice = "Endpoint API berhasil diperbarui."
+                            endpointNotice = L10n.tr("settings.api.updated")
                         } else {
                             endpointNotice = nil
-                            endpointError = "URL tidak valid. Gunakan format lengkap, misalnya http://localhost:3000/api/v1"
+                            endpointError = L10n.tr("settings.api.invalid")
                         }
                     }
                     .accessibilityIdentifier("settings_save_endpoint_button")
 
-                    Text("Aktif: \(APIEndpointConfig.currentBaseURLString())")
+                    Text(String(format: L10n.tr("settings.api.active"), APIEndpointConfig.currentBaseURLString()))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .accessibilityIdentifier("settings_active_endpoint_label")
@@ -57,13 +57,13 @@ struct SettingsView: View {
                     }
                 }
 
-                Section("Akun") {
-                    Button("Keluar") { session.signOut() }
+                Section(L10n.tr("settings.section.account")) {
+                    Button(L10n.tr("settings.signout")) { session.signOut() }
                         .foregroundStyle(.red)
                         .accessibilityIdentifier("settings_signout_button")
                 }
             }
-            .navigationTitle("Pengaturan")
+            .navigationTitle(L10n.tr("settings.nav_title"))
             .onAppear {
                 draftBaseURL = APIEndpointConfig.currentBaseURLString()
             }

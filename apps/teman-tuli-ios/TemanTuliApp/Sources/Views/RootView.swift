@@ -9,13 +9,13 @@ struct RootView: View {
         if session.isAuthenticated {
             TabView {
                 LiveCaptionView(apiClient: apiClient, runtimeConfig: runtimeConfig)
-                    .tabItem { Label("Caption", systemImage: "captions.bubble") }
+                    .tabItem { Label(L10n.tr("tab.caption"), systemImage: "captions.bubble") }
 
                 SessionsView(apiClient: apiClient)
-                    .tabItem { Label("Transkrip", systemImage: "doc.text") }
+                    .tabItem { Label(L10n.tr("tab.transcripts"), systemImage: "doc.text") }
 
                 SettingsView()
-                    .tabItem { Label("Settings", systemImage: "gearshape") }
+                    .tabItem { Label(L10n.tr("tab.settings"), systemImage: "gearshape") }
             }
         } else {
             OnboardingView(apiClient: apiClient)

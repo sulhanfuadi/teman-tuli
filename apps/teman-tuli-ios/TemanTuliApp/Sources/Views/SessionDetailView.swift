@@ -12,23 +12,23 @@ struct SessionDetailView: View {
     var body: some View {
         Form {
             if let transcript = viewModel.session {
-                Section("Informasi") {
-                    LabeledContent("Judul", value: transcript.title)
-                    LabeledContent("Kelas", value: transcript.className ?? "-")
-                    LabeledContent("Bahasa", value: transcript.languageCode)
+                Section(L10n.tr("detail.section.info")) {
+                    LabeledContent(L10n.tr("detail.label.title"), value: transcript.title)
+                    LabeledContent(L10n.tr("detail.label.class"), value: transcript.className ?? "-")
+                    LabeledContent(L10n.tr("detail.label.language"), value: transcript.languageCode)
                 }
 
-                Section("Transkrip") {
+                Section(L10n.tr("detail.section.transcript")) {
                     Text(transcript.fullText)
                         .font(.body)
                         .textSelection(.enabled)
                         .accessibilityIdentifier("detail_transcript_text")
                 }
 
-                Section("Catatan Pribadi") {
-                    TextField("Tambahkan konteks penting dari kelas", text: $viewModel.notes, axis: .vertical)
+                Section(L10n.tr("detail.section.notes")) {
+                    TextField(L10n.tr("detail.notes.placeholder"), text: $viewModel.notes, axis: .vertical)
                         .accessibilityIdentifier("detail_notes_field")
-                    Button(viewModel.isSavingNotes ? "Menyimpan..." : "Simpan Catatan") {
+                    Button(viewModel.isSavingNotes ? L10n.tr("detail.notes.saving") : L10n.tr("detail.notes.save")) {
                         guard let token = session.token else { return }
                         Task { await viewModel.saveNotes(token: token, appSession: session) }
                     }
@@ -36,15 +36,15 @@ struct SessionDetailView: View {
                     .accessibilityIdentifier("detail_save_notes_button")
                 }
 
-                Section("Feedback Kualitas Caption") {
-                    Picker("Rating", selection: $viewModel.selectedRating) {
+                Section(L10n.tr("detail.section.feedback")) {
+                    Picker(L10n.tr("detail.feedback.rating"), selection: $viewModel.selectedRating) {
                         ForEach(CaptionFeedbackRating.allCases) { rating in
                             Text(rating.rawValue).tag(rating)
                         }
                     }
-                    TextField("Apa yang perlu diperbaiki?", text: $viewModel.feedbackComment, axis: .vertical)
+                    TextField(L10n.tr("detail.feedback.placeholder"), text: $viewModel.feedbackComment, axis: .vertical)
                         .accessibilityIdentifier("detail_feedback_comment_field")
-                    Button(viewModel.isSubmittingFeedback ? "Mengirim..." : "Kirim Feedback") {
+                    Button(viewModel.isSubmittingFeedback ? L10n.tr("detail.feedback.submitting") : L10n.tr("detail.feedback.submit")) {
                         guard let token = session.token else { return }
                         Task { await viewModel.submitFeedback(token: token, appSession: session) }
                     }
@@ -52,9 +52,9 @@ struct SessionDetailView: View {
                     .accessibilityIdentifier("detail_submit_feedback_button")
                 }
             } else if viewModel.isLoading {
-                ProgressView("Memuat detail...")
+                ProgressView(L10n.tr("detail.loading"))
             } else {
-                Text(viewModel.errorMessage ?? "Transkrip tidak ditemukan.")
+                Text(viewModel.errorMessage ?? L10n.tr("detail.not_found"))
                     .foregroundStyle(.secondary)
             }
 
@@ -70,11 +70,11 @@ struct SessionDetailView: View {
                         .foregroundStyle(.red)
                     if let ref = viewModel.errorRequestReference {
                         HStack {
-                            Text("Ref: \(ref)")
+                            Text(String(format: L10n.tr("common.ref"), ref))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             Spacer()
-                            Button("Copy Ref") {
+                            Button(L10n.tr("common.copy_ref")) {
                                 UIPasteboard.general.string = ref
                             }
                             .font(.caption)
@@ -84,7 +84,7 @@ struct SessionDetailView: View {
                 .accessibilityIdentifier("detail_error_card")
             }
         }
-        .navigationTitle("Detail Transkrip")
+        .navigationTitle(L10n.tr("detail.nav_title"))
         .task {
             guard let token = session.token else { return }
             await viewModel.load(token: token, appSession: session)

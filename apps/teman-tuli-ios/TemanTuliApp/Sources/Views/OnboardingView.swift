@@ -16,39 +16,39 @@ struct OnboardingView: View {
                     Section {
                         Label(notice, systemImage: "exclamationmark.triangle")
                             .foregroundStyle(.orange)
-                        Button("Tutup") { session.clearNotice() }
+                        Button(L10n.tr("common.close")) { session.clearNotice() }
                     }
                 }
 
-                Section("Akses Akun") {
-                    Picker("Mode", selection: $viewModel.authMode) {
+                Section(L10n.tr("onboarding.account_access")) {
+                    Picker(L10n.tr("common.mode"), selection: $viewModel.authMode) {
                         ForEach(AuthMode.allCases) { mode in
-                            Text(mode.rawValue).tag(mode)
+                            Text(mode.localizedTitle).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("auth_mode_picker")
                 }
 
-                Section(viewModel.authMode == .register ? "Mulai Teman Tuli" : "Masuk ke Teman Tuli") {
+                Section(viewModel.authMode == .register ? L10n.tr("onboarding.register.title") : L10n.tr("onboarding.login.title")) {
                     if viewModel.authMode == .register {
-                        TextField("Nama", text: $viewModel.name)
+                        TextField(L10n.tr("onboarding.name"), text: $viewModel.name)
                             .accessibilityIdentifier("register_name_field")
                     }
-                    TextField("Email", text: $viewModel.email)
+                    TextField(L10n.tr("common.email"), text: $viewModel.email)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .accessibilityIdentifier("auth_email_field")
-                    SecureField("Password", text: $viewModel.password)
+                    SecureField(L10n.tr("common.password"), text: $viewModel.password)
                         .accessibilityIdentifier("auth_password_field")
                     if viewModel.authMode == .register {
-                        TextField("Tujuan aksesibilitas", text: $viewModel.goal, axis: .vertical)
+                        TextField(L10n.tr("onboarding.goal"), text: $viewModel.goal, axis: .vertical)
                             .accessibilityIdentifier("register_goal_field")
                     }
                 }
 
                 Section {
-                    Button(viewModel.isLoading ? "Memproses..." : viewModel.authMode.rawValue) {
+                    Button(viewModel.isLoading ? L10n.tr("onboarding.processing") : viewModel.authMode.localizedTitle) {
                         Task { await viewModel.submit(session: session) }
                     }
                     .disabled(viewModel.isLoading || !viewModel.canSubmit)
@@ -62,11 +62,11 @@ struct OnboardingView: View {
                             .accessibilityIdentifier("auth_error_message")
                         if let ref = viewModel.errorRequestReference {
                             HStack {
-                                Text("Ref: \(ref)")
+                                Text(String(format: L10n.tr("common.ref"), ref))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                 Spacer()
-                                Button("Copy Ref") {
+                                Button(L10n.tr("common.copy_ref")) {
                                     UIPasteboard.general.string = ref
                                 }
                                 .font(.caption)
@@ -76,7 +76,7 @@ struct OnboardingView: View {
                     }
                 }
             }
-            .navigationTitle("Teman Tuli")
+            .navigationTitle(L10n.tr("app.title"))
         }
     }
 }

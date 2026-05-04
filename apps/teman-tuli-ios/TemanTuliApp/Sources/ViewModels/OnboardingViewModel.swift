@@ -4,6 +4,13 @@ enum AuthMode: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     case register
     case login
+
+    var localizedTitle: String {
+        switch self {
+        case .register: return L10n.tr("onboarding.mode.register")
+        case .login: return L10n.tr("onboarding.mode.login")
+        }
+    }
 }
 
 @MainActor
@@ -12,7 +19,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var email: String = ""
     @Published var password: String = ""
-    @Published var goal: String = "Akses caption kelas yang lebih inklusif"
+    @Published var goal: String = L10n.tr("onboarding.default_goal")
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var errorRequestReference: String?
@@ -63,7 +70,7 @@ final class OnboardingViewModel: ObservableObject {
             errorMessage = mapped.message
             errorRequestReference = mapped.requestReference
         } catch {
-            errorMessage = "Autentikasi gagal. Coba lagi."
+            errorMessage = L10n.tr("onboarding.auth_failed")
             errorRequestReference = nil
         }
     }
@@ -71,12 +78,12 @@ final class OnboardingViewModel: ObservableObject {
     private func mapError(_ error: APIError) -> APIErrorPresentation {
         switch error {
         case .unauthorized:
-            return APIErrorPresentation(message: "Email atau password tidak sesuai.", requestReference: nil)
+            return APIErrorPresentation(message: L10n.tr("onboarding.invalid_credentials"), requestReference: nil)
         default:
             return APIErrorMessageFormatter.presentation(
                 for: error,
-                networkMessage: "Tidak bisa terhubung ke server. Periksa koneksi internet/backend.",
-                fallbackMessage: "Terjadi kesalahan saat autentikasi."
+                networkMessage: L10n.tr("onboarding.network_error"),
+                fallbackMessage: L10n.tr("onboarding.auth_error")
             )
         }
     }
