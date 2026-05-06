@@ -21,7 +21,7 @@ This creates learning inequality, reduces confidence during discussion, and incr
 - **Key technical tradeoff:** Simulator-first validation was prioritized for execution speed, while hardware-dependent microphone behavior was documented transparently as a known limitation.
 - **What I learned:** Accessibility products require equal focus on readability, trust, and failure UX — not just feature completeness.
 
-Read full case study: `docs/case-study.md`
+Read full case study: [docs/case-study.md](docs/case-study.md)
 
 ## Target Users
 Primary users:
@@ -118,7 +118,7 @@ Main entities:
 - `apps/teman-tuli-ios` — iOS app
 - `apps/teman-tuli-api` — backend API
 - `docs/evidence` — research, case studies, scripts, iteration logs
-- `docs/roadmap-10-weeks.md` — implementation roadmap
+- [docs/roadmap-10-weeks.md](docs/roadmap-10-weeks.md) — implementation roadmap
 - `AGENTS.md` — repository working instructions for coding agents
 
 ## Local Development

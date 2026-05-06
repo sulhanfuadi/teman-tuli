@@ -53,7 +53,7 @@ Base path: `/api/v1`
 ## Observability Baseline (Priority 1.5)
 - Correlation ID propagation via `x-correlation-id` header.
 - Structured triage logs for completed and failed requests.
-- Monitoring and alerting rollout plan in `docs/observability-baseline.md`.
+- Monitoring and alerting rollout plan in [docs/observability-baseline.md](docs/observability-baseline.md).
 
 ## Privacy Defaults
 - Transcripts are private by default.
@@ -90,7 +90,7 @@ Base path: `/api/v1`
    ```
 
 Environment and secret policy is documented in:
-- `docs/environment-secrets.md`
+- [docs/environment-secrets.md](docs/environment-secrets.md)
 
 ## Migration Reproducibility Check (Priority 0.2)
 Use this sequence to verify clean-database bootstrap from committed migration files only.
